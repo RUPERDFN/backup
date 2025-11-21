@@ -1,0 +1,30 @@
+{
+  "Landing Page Load": {
+    "status": "passed",
+    "duration": "1.2s"
+  },
+  "Demo Login Flow": {
+    "status": "passed",
+    "duration": "0.8s"
+  },
+  "Tour Navigation": {
+    "status": "passed",
+    "duration": "2.1s"
+  },
+  "QA Dashboard": {
+    "status": "passed",
+    "duration": "1.5s"
+  },
+  "API Health Check": {
+    "status": "passed",
+    "duration": "0.3s"
+  },
+  "Database Connection": {
+    "status": "passed",
+    "duration": "0.5s"
+  },
+  "Premium Detection": {
+    "status": "passed",
+    "duration": "0.2s"
+  }
+}

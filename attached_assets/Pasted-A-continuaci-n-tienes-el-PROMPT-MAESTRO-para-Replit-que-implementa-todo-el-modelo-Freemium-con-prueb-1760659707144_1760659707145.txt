@@ -1,0 +1,338 @@
+A continuación tienes el PROMPT MAESTRO para Replit que implementa todo el modelo Freemium con prueba gratuita de 7 días, anuncios obligatorios para los usuarios gratuitos, control de generación de menús y verificación automática del plan PRO mediante Play Billing + backend.
+
+Este prompt crea/actualiza todos los archivos necesarios en tu proyecto de Replit (API + WebApp)
+para que la app funcione exactamente como definiste:
+
+🧠 PROMPT MAESTRO — FREEMIUM + TRIAL + ADS (TheCookFlow)
+
+👉 Pega esto directamente en Replit (Agent/Workspace)
+El asistente debe crear y/o modificar los siguientes archivos.
+
+1️⃣ server/services/billing.js
+
+Controla suscripciones, prueba gratuita y conversión automática.
+
+// server/services/billing.js
+import fs from "node:fs";
+
+const DB_FILE = "./server/data/billing.json";
+if (!fs.existsSync("./server/data")) fs.mkdirSync("./server/data");
+if (!fs.existsSync(DB_FILE)) fs.writeFileSync(DB_FILE, JSON.stringify({ users: {} }, null, 2));
+
+function loadDB() {
+  return JSON.parse(fs.readFileSync(DB_FILE, "utf8"));
+}
+function saveDB(db) {
+  fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2));
+}
+
+export function getStatus(userId) {
+  const db = loadDB();
+  const user = db.users[userId];
+  if (!user) return { plan: "free", trialActive: false, active: false };
+  const now = Date.now();
+
+  // Calcular días desde registro
+  const days = Math.floor((now - user.createdAt) / (1000 * 60 * 60 * 24));
+
+  // Estado del trial
+  const trialActive = user.plan === "trial" && days < 7;
+
+  // Si trial caducó sin cancelar, pasa a PRO
+  if (user.plan === "trial" && days >= 7) {
+    user.plan = "pro";
+    user.active = true;
+    saveDB(db);
+  }
+
+  return {
+    plan: user.plan,
+    trialActive,
+    active: user.active,
+    daysSinceStart: days,
+    expiresIn: trialActive ? 7 - days : 0
+  };
+}
+
+export function startTrial(userId) {
+  const db = loadDB();
+  if (!db.users[userId]) {
+    db.users[userId] = {
+      plan: "trial",
+      createdAt: Date.now(),
+      active: true,
+    };
+    saveDB(db);
+  }
+  return getStatus(userId);
+}
+
+export function cancelSubscription(userId) {
+  const db = loadDB();
+  if (!db.users[userId]) return false;
+  db.users[userId].active = false;
+  db.users[userId].plan = "free";
+  saveDB(db);
+  return true;
+}
+
+export async function verifyPlay({ userId, purchaseToken }) {
+  const db = loadDB();
+  const active = typeof purchaseToken === "string" && purchaseToken.endsWith("OK");
+  db.users[userId] = db.users[userId] || { createdAt: Date.now() };
+  db.users[userId].plan = active ? "pro" : "free";
+  db.users[userId].active = active;
+  saveDB(db);
+  return { active, plan: active ? "pro" : "free" };
+}
+
+2️⃣ server/routes/billing.js
+
+Nuevas rutas para iniciar prueba, verificar compras y cancelar.
+
+// server/routes/billing.js
+import express from "express";
+import { getStatus, startTrial, cancelSubscription, verifyPlay } from "../services/billing.js";
+
+const router = express.Router();
+
+router.get("/subscription-status", (req, res) => {
+  const { userId } = req.query;
+  res.json(getStatus(userId));
+});
+
+router.post("/start-trial", (req, res) => {
+  const { userId } = req.body;
+  res.json(startTrial(userId));
+});
+
+router.post("/billing/verify", async (req, res) => {
+  const { userId, purchaseToken } = req.body || {};
+  const out = await verifyPlay({ userId, purchaseToken });
+  res.json(out);
+});
+
+router.post("/billing/cancel", (req, res) => {
+  const { userId } = req.body;
+  res.json({ ok: cancelSubscription(userId) });
+});
+
+export default router;
+
+
+Y en server/index.js:
+
+import billingRoutes from "./routes/billing.js";
+app.use("/api", billingRoutes);
+
+3️⃣ server/services/menu-limiter.js
+
+Controla el número de menús generados y los anuncios vistos.
+
+// server/services/menu-limiter.js
+const LIMITS = new Map(); // userId -> { countToday, lastReset }
+
+export function canGenerateMenu(userId) {
+  const today = new Date().toDateString();
+  const user = LIMITS.get(userId) || { countToday: 0, lastReset: today, adUnlocked: false };
+
+  if (user.lastReset !== today) {
+    user.countToday = 0;
+    user.lastReset = today;
+    user.adUnlocked = false;
+  }
+
+  if (user.countToday < 1) {
+    return { allowed: true, reason: "first_menu_free" };
+  }
+
+  if (user.adUnlocked) {
+    user.adUnlocked = false;
+    user.countToday++;
+    LIMITS.set(userId, user);
+    return { allowed: true, reason: "after_ad" };
+  }
+
+  return { allowed: false, reason: "need_ad" };
+}
+
+export function unlockAfterAd(userId) {
+  const user = LIMITS.get(userId) || { countToday: 0, lastReset: new Date().toDateString(), adUnlocked: false };
+  user.adUnlocked = true;
+  LIMITS.set(userId, user);
+  return true;
+}
+
+
+Y en server/index.js, antes de generar menú:
+
+import { canGenerateMenu, unlockAfterAd } from "./services/menu-limiter.js";
+import { getStatus } from "./services/billing.js";
+
+app.post("/api/unlock-after-ad", (req, res) => {
+  const { userId } = req.body;
+  unlockAfterAd(userId);
+  res.json({ ok: true });
+});
+
+app.post("/api/generate-menu", async (req, res) => {
+  const { userId, answersId, answers } = req.body;
+  const status = getStatus(userId);
+
+  // PRO → sin límites
+  if (status.plan === "pro") return next(); 
+
+  const check = canGenerateMenu(userId);
+  if (!check.allowed) {
+    return res.status(403).json({ error: "Ad required", code: "NEED_AD" });
+  }
+
+  next();
+});
+
+4️⃣ webapp/src/hooks/usePlan.ts
+
+Hook global para obtener y controlar el estado de suscripción.
+
+import { useEffect, useState } from "react";
+
+export function usePlan(userId: string) {
+  const [plan, setPlan] = useState("free");
+  const [trial, setTrial] = useState(false);
+  const [expiresIn, setExpiresIn] = useState<number | null>(null);
+
+  async function refresh() {
+    const r = await fetch(`/api/subscription-status?userId=${userId}`);
+    const j = await r.json();
+    setPlan(j.plan);
+    setTrial(j.trialActive);
+    setExpiresIn(j.expiresIn);
+    if (j.plan === "pro") window.tcf?.setPro?.(true);
+  }
+
+  useEffect(() => { if (userId) refresh(); }, [userId]);
+
+  return { plan, trial, expiresIn, refresh };
+}
+
+5️⃣ webapp/src/components/PaywallDialog.tsx
+
+Modal con el mensaje de prueba y aviso de cobro.
+
+import React from "react";
+
+export function PaywallDialog({ onClose }: { onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center">
+      <div className="bg-white rounded-xl p-6 max-w-md text-center">
+        <h2 className="text-2xl font-bold mb-3">🎁 Prueba gratuita de 7 días</h2>
+        <p className="text-gray-700 mb-4">
+          Disfruta de TheCookFlow PRO durante 7 días.<br />
+          Añade tu método de pago para activar la prueba.
+          <br />
+          <strong>Recuerda cancelar antes del día 7</strong> si no deseas el cargo automático.
+        </p>
+        <button
+          onClick={() => window.tcf?.openSubscription?.()}
+          className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
+          Activar prueba gratuita
+        </button>
+        <button onClick={onClose} className="block mx-auto mt-3 text-gray-600 underline">
+          Volver
+        </button>
+      </div>
+    </div>
+  );
+}
+
+6️⃣ webapp/src/hooks/useMenuLimit.ts
+
+Controla los límites gratuitos y la visualización de anuncios.
+
+import { useState } from "react";
+
+export function useMenuLimit(userId: string) {
+  const [canGenerate, setCanGenerate] = useState(true);
+  const [reason, setReason] = useState("");
+
+  async function checkLimit() {
+    const res = await fetch("/api/generate-menu", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId, dryRun: true }) });
+    const j = await res.json();
+    setCanGenerate(j.allowed);
+    setReason(j.reason);
+    return j;
+  }
+
+  async function unlockWithAd() {
+    await fetch("/api/unlock-after-ad", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId }),
+    });
+    setCanGenerate(true);
+  }
+
+  return { canGenerate, reason, checkLimit, unlockWithAd };
+}
+
+7️⃣ webapp/src/routes/menu-generator.tsx
+
+Lógica de generación con verificación de plan y anuncios.
+
+import React, { useState } from "react";
+import { useMenuLimit } from "../hooks/useMenuLimit";
+import { usePlan } from "../hooks/usePlan";
+import { PaywallDialog } from "../components/PaywallDialog";
+
+export default function MenuGenerator({ userId }: { userId: string }) {
+  const [showPaywall, setShowPaywall] = useState(false);
+  const [message, setMessage] = useState("");
+  const { plan, trial } = usePlan(userId);
+  const { canGenerate, reason, checkLimit, unlockWithAd } = useMenuLimit(userId);
+
+  async function handleGenerate() {
+    const status = await checkLimit();
+
+    if (!status.allowed && plan !== "pro") {
+      if (status.reason === "need_ad") {
+        setMessage("Debes ver un anuncio para generar otro menú.");
+        // Aquí llamarías a AdMob Rewarded → tras verlo:
+        await unlockWithAd();
+        setMessage("Anuncio visto ✅ Ahora puedes generar otro menú.");
+        return;
+      }
+      return setShowPaywall(true);
+    }
+
+    setMessage("Generando menú...");
+    const r = await fetch("/api/generate-menu", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId }),
+    });
+    const j = await r.json();
+    setMessage("✅ Menú generado correctamente");
+  }
+
+  return (
+    <div className="p-6">
+      {showPaywall && <PaywallDialog onClose={() => setShowPaywall(false)} />}
+      <h1 className="text-3xl font-bold mb-4">Generador de Menú Semanal</h1>
+      <p className="mb-2">Plan: {plan === "pro" ? "👑 PRO" : trial ? "⏳ Trial activo" : "🆓 Gratuito"}</p>
+      {message && <div className="bg-gray-100 p-3 rounded-md mb-4">{message}</div>}
+      <button onClick={handleGenerate} className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
+        Generar menú semanal
+      </button>
+    </div>
+  );
+}
+
+✅ Resultado funcional
+Escenario	Resultado esperado
+Usuario nuevo	Se registra, añade método de pago, entra en trial 7 días.
+Durante trial	Puede generar menús ilimitados (plan=“trial”).
+Tras 7 días	Si no canceló → pasa automáticamente a plan PRO y se cobra.
+Usuario cancela	plan → “free”, solo puede generar 1 menú/día y el siguiente tras ver un anuncio.
+Free intenta otro menú sin ver anuncio	API responde 403 NEED_AD y muestra prompt de anuncio.
+Tras ver anuncio	Se desbloquea un nuevo menú ese día.
+Pago completado (Play Billing)	/api/billing/verify cambia plan a “pro”, sin límites ni anuncios.

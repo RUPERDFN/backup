@@ -1,0 +1,38 @@
+🍳 Compilando TheCookFlow App Bundle (.aab)...
+
+🧹 Limpiando builds anteriores...
+BUILD SUCCESSFUL in 2s
+1 actionable task: 1 executed
+
+🔐 Generando keystore para firmar App Bundle...
+Generating 2,048 bit RSA key pair and self-signed certificate (SHA256withRSA) with a validity of 10,000 days
+        for: CN=TheCookFlow, OU=Development, O=TheCookFlow, L=Madrid, S=Madrid, C=ES
+[Storing app/thecookflow-release-key.keystore]
+✅ Keystore generado exitosamente
+
+🔨 Compilando App Bundle firmado...
+
+> Task :app:bundleRelease
+Bundle(s) generated successfully.
+
+BUILD SUCCESSFUL in 45s
+15 actionable tasks: 15 executed
+
+✅ App Bundle compilado exitosamente!
+📁 Ubicación: app/build/outputs/bundle/release/app-release.aab
+📏 Tamaño: 12M
+
+📋 App Bundle copiado a play_store_assets/
+
+🔨 Generando APK adicional para testing...
+BUILD SUCCESSFUL in 8s
+8 actionable tasks: 8 executed
+📋 APK de testing también generado
+
+ℹ️  Información del App Bundle:
+El App Bundle (.aab) es el formato preferido por Google Play Store
+Permite optimizaciones automáticas de descarga para diferentes dispositivos
+Tamaño de descarga será menor que el APK tradicional
+
+🎉 ¡Compilación completada! App Bundle listo para subir a Google Play Store
+📤 Usa el archivo: play_store_assets/thecookflow-v1.0.0.aab

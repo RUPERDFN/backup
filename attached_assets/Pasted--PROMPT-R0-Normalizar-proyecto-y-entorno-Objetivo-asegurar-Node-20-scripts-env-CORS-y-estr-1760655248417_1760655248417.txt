@@ -1,0 +1,225 @@
+🔧 PROMPT R0 — Normalizar proyecto y entorno
+
+Objetivo: asegurar Node 20, scripts, .env, CORS y estructura mínima.
+
+Actúa sobre mi repo en Replit y realiza:
+
+1) Node y scripts:
+- Asegura Node 20 + npm/pnpm.
+- Crea/actualiza package.json con scripts:
+  "dev": "node server/index.js",
+  "start": "node server/index.js",
+  "build": "echo 'no build'"
+
+2) Estructura mínima:
+- server/index.js
+- server/services/ai.js        (stub IA)
+- server/services/billing.js   (stub Play Billing)
+- server/middleware/security.js
+- public/                      (estáticos si hace falta)
+
+3) .env.example con:
+OPENAI_API_KEY=
+PERPLEXITY_API_KEY=
+PORT=3000
+ALLOWED_ORIGINS=http://localhost:5173,https://app.thecookflow.com,https://thecookflow.com
+UPLOAD_DIR=./uploads
+BILLING_PROVIDER=play
+
+4) Añade .replit para arrancar con "npm run dev".
+
+🧠 PROMPT R1 — API Express segura (CORS + rate limit + health)
+
+Objetivo: levantar Express con seguridad básica y /api/health.
+
+En server/index.js:
+- Express + cors + helmet + morgan/pino-http + rate-limit.
+- Lee process.env.PORT (default 3000) y ALLOWED_ORIGINS (separado por comas).
+- CORS: solo orígenes permitidos, methods GET/POST, credentials: false.
+- Rutas:
+  GET /api/health -> { ok:true, ts:Date.now(), env:process.env.NODE_ENV || 'dev' }
+
+- Manejo de errores global: {error, code, path, ts}.
+
+Exporta app.listen(PORT) y log “API on :PORT”.
+
+🍳 PROMPT R2 — Endpoint /api/chef (stub IA listo para crecer)
+
+Objetivo: “enganchar” tu asistente IA con un servicio adaptable.
+
+Crea server/services/ai.js con función:
+  async function generate({prompt, alergias=[], presupuesto, tiempo, imageUrl}) {
+    // Si existe OPENAI_API_KEY: llama a OpenAI; si no, devuelve mock
+    // Devuelve objeto { result: "receta/menú con ingredientes, pasos, sustituciones, precio aprox" }
+  }
+Exporta { generate }.
+
+En server/index.js:
+- POST /api/chef  body: {prompt, alergias?, presupuesto?, tiempo?, imageUrl?}
+- Valida contenido mínimo (prompt string).
+- Llama a ai.generate y responde {result}.
+- Rate-limit más estricto para /api/chef (p.ej., 30/15min por IP).
+
+
+Esto deja preparada la evolución a “visión con foto de nevera”.
+
+💳 PROMPT R3 — Suscripciones: /api/subscription-status y /api/billing/verify
+
+Objetivo: activar el modelo freemium/PRO (mock verificación Play listo para producción).
+
+Crea server/services/billing.js:
+- Mapa en memoria: const PLANS = new Map(); // userId -> {active:true, plan:'pro', updatedAt}
+- async function verifyPlay({userId, purchaseToken}) {
+    // MOCK: si purchaseToken termina en 'OK' => activo; si no => false
+    const active = typeof purchaseToken === 'string' && purchaseToken.endsWith('OK');
+    if (active) PLANS.set(userId, {active:true, plan:'pro', updatedAt:Date.now()});
+    return {active, plan: active ? 'pro' : 'free'};
+  }
+- function getStatus(userId) { return PLANS.get(userId) || {active:false, plan:'free'}; }
+Exporta { verifyPlay, getStatus }.
+
+En server/index.js:
+- GET /api/subscription-status?userId=...  -> devuelve getStatus(userId)
+- POST /api/billing/verify {userId, purchaseToken} -> llama verifyPlay y devuelve {active, plan}
+
+
+“Verificación inicial con /api/subscription-status” y pricing mensual de tu checklist.
+
+🖼️ PROMPT R4 — Subida de imagen (nevera): /api/upload
+
+Objetivo: aceptar 1 imagen, devolver imageUrl servible.
+
+En server/index.js:
+- Añade multer (storage en carpeta UPLOAD_DIR del .env, por defecto ./uploads). Limite 4MB, sólo image/*.
+- Sirve estático /uploads con cache-control privado o corto.
+- POST /api/upload (campo 'file') -> guarda y devuelve { imageUrl: "/uploads/<filename>" }.
+- Crea carpeta si no existe. Nota: para producción moveremos a S3/Cloudflare R2; aquí basta local.
+
+Seguridad:
+- Valida mimetype (jpeg/png/webp).
+- Rechaza >4MB con 413.
+
+🔒 PROMPT R5 — Seguridad y calidad (helmet CSP, payloads, logs)
+
+Objetivo: evitar sorpresas en producción.
+
+En server/middleware/security.js:
+- helmet() con:
+  - contentSecurityPolicy básica: default-src 'self' https:;
+  - referrerPolicy: 'no-referrer';
+  - hidePoweredBy, xssFilter (via helmet), noSniff.
+- JSON body limit 1mb, urlencoded 1mb.
+- Sanitiza prompt (trim, length < 2.5k, sin binarios).
+- Logger de latencias simple (Date.now dif).
+
+En server/index.js usa middleware/security.js antes de rutas.
+
+🧪 PROMPT R6 — QA rápido vía scripts y curl
+
+Objetivo: comprobar que todo responde.
+
+Crea scripts npm:
+  "qa:api": "node tools/qa/health-check.js"
+
+Crea tools/qa/health-check.js que:
+- Haga fetch a http://localhost:3000/api/health y verifique ok:true
+- Haga fetch a http://localhost:3000/api/subscription-status?userId=testpro
+- Imprima resultados y exit(1) si algo falla
+
+Añade README con ejemplos curl:
+- curl http://localhost:3000/api/health
+- curl -XPOST http://localhost:3000/api/billing/verify -H "content-type: application/json" -d '{"userId":"u1","purchaseToken":"abcOK"}'
+- curl http://localhost:3000/api/subscription-status?userId=u1
+
+🌐 PROMPT R7 — CORS exacto y producción
+
+Objetivo: que WebApp y Android WebView entren sin problemas.
+
+Ajusta CORS para:
+- Orígenes permitidos: https://app.thecookflow.com, https://thecookflow.com, http://localhost:5173
+- Métodos: GET, POST
+- Headers: Content-Type, Accept, x-utm-source, x-utm-medium (si los usas)
+- credentials: false
+
+Añade respuesta a OPTIONS para /api/*.
+
+🧩 PROMPT R8 — Bridge WebApp «tcf»
+
+Objetivo: que tu WebApp sepa hablar con la app nativa y con la API.
+
+Crea public/tcf-bridge.js (o en tu bundle web) con:
+
+window.tcf = {
+  getUserId() {
+    if (window.Android?.getUserId) return window.Android.getUserId();
+    return localStorage.getItem('uid') || (localStorage.setItem('uid', crypto.randomUUID()), localStorage.getItem('uid'));
+  },
+  async status() {
+    const uid = this.getUserId();
+    const r = await fetch(`/api/subscription-status?userId=${encodeURIComponent(uid)}`);
+    return r.json(); // {active, plan}
+  },
+  openSubscription() {
+    const uid = this.getUserId();
+    if (window.Android?.openSubscription) return window.Android.openSubscription(uid);
+    // fallback web: redirigir a Play
+    location.href = 'https://play.google.com/store/apps/details?id=com.thecookflow.app';
+  },
+  setPro(active) { if (window.Android?.setPro) window.Android.setPro(!!active); }
+};
+
+// Deep link/compra desde la app:
+window.addEventListener('tcf:deeplink', async (e) => {
+  const {userId, token} = e.detail || {};
+  if (!token) return;
+  await fetch('/api/billing/verify', {
+    method:'POST',
+    headers:{'content-type':'application/json'},
+    body: JSON.stringify({userId, purchaseToken: token})
+  });
+  window.tcf.setPro(true);
+});
+
+
+Esto encaja con el flujo deeplink/verify que quieres en Android.
+
+🧱 PROMPT R9 — Gating Free/PRO (límite simple sin DB)
+
+Objetivo: limitar llamadas al chef en FREE; desbloquear al ser PRO.
+
+En tu WebApp (ej. store o hook):
+- Genera userId con tcf.getUserId().
+- Al enviar a /api/chef, antes consulta tcf.status():
+  - Si active:false -> aplica tope diario: guarda en localStorage "chef_count_<YYYYMMDD>" y corta cuando >=3 (muestra modal paywall con botón tcf.openSubscription()).
+  - Si active:true -> sin límites y llama tcf.setPro(true) para ocultar Ads en Android.
+
+Añade un pequeño componente Paywall que se active al superar el límite.
+
+📦 PROMPT R10 — Replit Secrets y arranque
+
+Objetivo: dejarlo corriendo en Replit sin dolores.
+
+En Replit → Secrets:
+- Añade OPENAI_API_KEY (si vas a usar IA real).
+- (Opcional) PERPLEXITY_API_KEY.
+- ALLOWED_ORIGINS = https://app.thecookflow.com,https://thecookflow.com,http://localhost:5173
+- UPLOAD_DIR = ./uploads
+
+En Shell:
+- npm i
+- npm run dev   # o usa el botón Run
+
+Pruebas:
+- Abre la URL de Replit /api/health  -> {ok:true}
+- Ejecuta curl de R6.
+
+✅ PROMPT R11 — Checklist de validación final
+
+Objetivo: asegurar que la app Android/WebView ya puede integrarse.
+
+1) /api/health responde {ok:true}.
+2) /api/billing/verify con token "OK" marca PRO; /api/subscription-status devuelve {active:true, plan:'pro'} para ese userId.
+3) /api/upload acepta una imagen <4MB y devuelve imageUrl servible.
+4) CORS: llamadas desde https://app.thecookflow.com funcionan (sin errores en consola).
+5) WebApp: límite 3 usos/día de /api/chef si FREE; modal paywall muestra botón tcf.openSubscription().
+6) WebApp: al volverse PRO, oculta Ads en Android (tcf.setPro(true)).

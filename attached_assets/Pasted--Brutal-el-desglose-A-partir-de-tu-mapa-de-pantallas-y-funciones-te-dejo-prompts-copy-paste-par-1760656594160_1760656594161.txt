@@ -1,0 +1,306 @@
+¡Brutal el desglose! 💪 A partir de tu mapa de pantallas y funciones, te dejo prompts copy-paste para Replit (Agent/Workspace) que crean la estructura de rutas, guards, contratos (Zod), control de freemium/premium, APIs y DB. Están ordenados para que alguien sin experiencia pueda seguirlos paso a paso sin romper nada de lo que ya tienes.
+
+Suposiciones mínimas: monorepo o repo con webapp/ (React+Vite) y server/ (Node+Express). DB con PostgreSQL y Drizzle (puedes cambiar por Prisma si prefieres). Auth: OIDC Replit + JWT en backend.
+
+🔷 BLOQUE A — FRONTEND (WebApp)
+
+Rutas, guards, layout, paywall y bridge Android.
+
+A1) Router + Lazy + Layouts
+
+Objetivo: montar todas tus rutas públicas/privadas con lazy loading y un layout común.
+
+PROMPT (pega en Replit):
+
+Crea/actualiza en webapp:
+
+1) Instala deps:
+- react-router-dom
+- zustand
+- zod
+
+2) Crea src/app/router.tsx con:
+- Rutas públicas:
+  /, /login, /register, /pricing, /help, /contact, /legal
+  /demo/questionnaire, /demo/generator, /demo/skinchef
+  /tour/1-onboarding, /tour/2-menu, /tour/3-recipe, /tour/4-shopping-list, /tour/5-paywall
+- Rutas autenticadas:
+  / (home user) => redirige a /dashboard si auth
+  /dashboard
+  /onboarding, /onboarding/result, /questionnaire
+  /menu-generator, /menu-generated, /my-menus
+  /saved-recipes, /recipe-library, /skinchef
+  /fridge-vision, /savings
+  /amazon-fresh
+  /account, /admin
+  /qa, /qa/smoke, /previews
+
+- Crea <PublicLayout/> y <PrivateLayout/> con navegación simple y footer.
+- Implementa <RequireAuth/>: si no hay auth → redirige a /login (o muestra modal login).
+- Implementa <RequirePRO/>: si no PRO → muestra <PaywallDialog/> y bloquea.
+- Todos los screens como lazy(() => import('...')) con placeholders.
+
+A2) Estado global + Auth + Plan FREE/PRO
+
+Objetivo: tener user, plan y contador de IA en un store simple.
+
+PROMPT:
+
+En webapp/src/store/app.ts crea Zustand store con:
+- user: { id, email? } | null
+- plan: 'free' | 'pro'
+- iaCountToday: number
+- actions: setUser, setPlan, incIaCount, resetIaCountIfNewDay
+
+Al cargar la app:
+- Lee userId desde window.tcf.getUserId?.() o genera UUID en localStorage.
+- Llama GET /api/subscription-status?userId=... y setPlan('pro'|'free').
+- Si pro -> window.tcf.setPro(true); si free -> setPro(false).
+
+A3) Paywall y límite Freemium
+
+Objetivo: bloquear a 3 usos/día en FREE y abrir compra en Android.
+
+PROMPT:
+
+En webapp/src/components/PaywallDialog.tsx:
+- Modal con copy PREMIUM €1.99/mes + prueba 7 días
+- Botón “Suscribirse” -> window.tcf.openSubscription()
+
+En la pantalla /skinchef y /menu-generator:
+- Antes de llamar /api/chef o /api/generate-menu:
+  - Si plan==='free' && iaCountToday>=3 -> abre PaywallDialog.
+  - Si no -> incIaCount() y sigue.
+
+A4) Bridge Android + Deep Link
+
+Objetivo: escuchar el evento de deep link y verificar en backend.
+
+PROMPT:
+
+Crea webapp/src/tcf-bridge.ts y cárgalo en main.tsx:
+- Implementa window.addEventListener('tcf:deeplink', async (e) => {
+    const { userId, token } = e.detail || {};
+    POST /api/billing/verify { userId, purchaseToken: token }
+    setPlan('pro'); window.tcf.setPro(true);
+  });
+
+- Exporta helpers getUserId(), status(), openSubscription(), setPro().
+
+A5) Vistas “stub” (rápidas) para QA
+
+Objetivo: colocar contenidos mínimos para cada ruta y no romper el router.
+
+PROMPT:
+
+Genera archivos vacíos con un <div> título y TODO:
+- Public: Landing, Login, Register, Pricing, Help, Contact, Legal, Demos, Tour
+- Private: Dashboard, Onboarding(+result), Questionnaire, MenuGenerator(+generated), MyMenus, SavedRecipes, RecipeLibrary, SkinChef, FridgeVision, Savings, AmazonFresh, Account, Admin, QA, QA/Smoke, Previews
+
+🔶 BLOQUE B — BACKEND (API)
+
+Contratos Zod, controladores, seguridad, billing, visión nevera y QA.
+
+B1) Zod Schemas + Validación
+
+Objetivo: tipar y validar todas las entradas.
+
+PROMPT:
+
+En server/schemas/index.js (o .ts si usas TS) con zod:
+- Auth: loginSchema { email, password }, registerSchema { email, password, name? }
+- Menu: generateMenuSchema { userId, personas:int, presupuesto:number, tiempo:number, alergias?:string[], preferencias?:string[] }
+- Chef: chefSchema { userId, prompt, alergias?:string[], presupuesto?:number, tiempo?:number, imageUrl?:string }
+- Vision: fridgeVisionSchema { userId, imageUrl }
+- Billing: verifySchema { userId, purchaseToken }
+- Amazon: cartSchema { userId, items:[{name, qty, unit}] }
+- QA: smokeSchema { }
+
+Exporta parseadores para usar en controladores (safeParse).
+
+B2) Rutas y Controladores
+
+Objetivo: cubrir todos tus endpoints con stubs funcionales.
+
+PROMPT:
+
+En server/index.js añade routers (usa import por archivo):
+- /api/health (GET)
+- /api/auth/login (POST), /api/auth/register (POST)
+- /api/generate-menu (POST)
+- /api/chef (POST)  [rate-limit 30/15min]
+- /api/fridge/vision (POST)  [usa /api/upload antes]
+- /api/shopping-list (POST/GET)  [simple en memoria al principio]
+- /api/recipes (GET/POST/PUT/DELETE)  [library + saved]
+- /api/billing/verify (POST), /api/subscription-status (GET)
+- /api/amazon/checkout (POST)  [redir URL mock]
+- /api/upload (POST)  [multer image <4MB]
+- /api/qa/smoke (GET)  [dev]
+
+Crea controladores por archivo en server/controllers/*.js
+- Cada uno valida con zod, llama servicios y devuelve JSON consistente {ok:true,data} o {ok:false,error}
+
+B3) Servicios IA y Menús
+
+Objetivo: unificar generate-menu y chef con el mismo motor.
+
+PROMPT:
+
+En server/services/ai.js:
+- export async function generateMenu(input) { ... } // usa OpenAI si hay clave, si no mocka menú semanal (7x3)
+- export async function chef(input) { ... }         // receta o respuesta conversacional
+- export async function analyzeFridge(imageUrl) { return {items:[{name:'huevo',freshness:'ok'}], tips:[], budgetImpact:2.5}; } // mock
+
+En /api/generate-menu -> validate(generateMenuSchema) -> ai.generateMenu
+En /api/chef -> validate(chefSchema) -> ai.chef
+En /api/fridge/vision -> validate(fridgeVisionSchema) -> ai.analyzeFridge
+
+B4) Billing + Plan
+
+Objetivo: mock Play Billing + estado plan unificado.
+
+PROMPT:
+
+En server/services/billing.js:
+- Map PLANS (userId -> {active:boolean, plan:'free'|'pro', updatedAt:number})
+- verifyPlay({userId,purchaseToken}) -> activo si token termina 'OK'; set Map
+- getStatus(userId) -> Map.get(userId) || {active:false, plan:'free'}
+- (futuro) webhook Google Play: crea /api/billing/webhook (POST) que actualice el Map
+
+En /api/subscription-status -> devuelve getStatus(userId)
+En /api/billing/verify -> verifyPlay
+
+B5) Seguridad, CORS y límites
+
+Objetivo: políticas conservadoras y CORS exacto.
+
+PROMPT:
+
+- helmet con CSP: default-src 'self' https:, img-src 'self' https: data: blob:
+- CORS: orígenes exactos (thecookflow.com, app.thecookflow.com, replit preview)
+- Rate limit: 100/15min global, 30/15min /api/chef
+- Sanitizar prompt: trim, max 2500 chars
+- JSON body limit: 1mb
+- Error handler JSON unificado
+
+B6) QA Endpoints
+
+Objetivo: panel de humo que te diga qué falla.
+
+PROMPT:
+
+/api/qa/smoke (GET) -> ejecuta internamente:
+- GET /api/health,
+- GET /api/subscription-status?userId=testpro,
+- POST /api/generate-menu (payload mínimo),
+- POST /api/chef ("Dime una receta rápida"),
+- Resumen {health:'ok', billing:'ok', menu:'ok', chef:'ok'} con tiempos
+
+🟩 BLOQUE C — BASE DE DATOS (Drizzle + PostgreSQL)
+
+Tablas alineadas con tus entidades.
+
+C1) Drizzle setup
+
+PROMPT:
+
+Añade deps:
+- drizzle-orm, pg, dotenv
+
+Crea server/db/schema.ts con tablas:
+- users: id(uuid, pk), email unique, created_at
+- subscriptions: id, user_id fk, plan('free'|'pro'), active boolean, purchase_token, updated_at
+- menu_plans: id, user_id, data(jsonb), created_at
+- recipes: id, user_id?, title, data(jsonb), created_at
+- shopping_lists: id, user_id, data(jsonb), created_at
+- food_recognitions: id, user_id, image_url, result(jsonb), created_at
+- recipe_library: id, title, data(jsonb), tags text[], created_at
+- google_play_purchases: id, user_id, token, status, payload jsonb, created_at
+
+Crea server/db/index.ts para conectar a PG con URL de env (DATABASE_URL).
+Crea server/services/repo.ts con funciones CRUD básicas para cada entidad.
+
+C2) Persistir lo básico (opcional en esta fase)
+
+PROMPT:
+
+- En POST /api/billing/verify -> guarda en subscriptions + google_play_purchases
+- En POST /api/generate-menu -> guarda en menu_plans (si PRO) o local-only si FREE
+- En POST /api/chef -> guarda última consulta en recipes (si el usuario la “guarda”)
+- En /api/fridge/vision -> inserta en food_recognitions
+
+🟦 BLOQUE D — QA & DEV EXPERIENCE
+D1) QA UI
+
+PROMPT:
+
+En webapp crea /qa y /qa/smoke:
+- UI con botones "Probar Health", "Probar Billing", "Probar Chef", "Probar Generate Menu"
+- Cada botón llama al endpoint correspondiente y pinta resultado (verde/rojo)
+
+D2) Scripts de humo
+
+PROMPT:
+
+En tools/qa/health-check.js:
+- Llama a /api/health, /api/billing/verify (u:tester, token:abcOK), /api/subscription-status?userId=tester, /api/generate-menu (payload pequeño)
+- Sale con code 0 si todo ok
+package.json: "qa:api": "node tools/qa/health-check.js"
+
+🟧 BLOQUE E — ANDROID BRIDGE (recordatorio)
+
+(ya lo tienes, pero lo enlazo con el frontend y backend por si alguien nuevo sigue la guía)
+
+Claves:
+
+window.tcf.getUserId() genera/lee el userId
+
+window.tcf.openSubscription() abre Play Billing y tras comprar llama /api/billing/verify
+
+Al convertir a PRO, la WebApp llama window.tcf.setPro(true) y se ocultan Ads en Android.
+
+✅ Checklist de aceptación por pantalla
+
+Landing (/): visible sin auth; CTA → /pricing y /register
+
+Login/Register: mock con Replit OIDC; guarda JWT y userId
+
+Pricing: muestra tabla FREE vs PRO; botón abre tcf.openSubscription() (si Android)
+
+Demo: cuestionario/generador/skinchef funcionan con límites de demo
+
+Tour: 5 pasos con capturas y mensajes
+
+Dashboard: estado plan, métricas básicas
+
+Onboarding: guarda preferencias en localStorage (y enviar a backend si PRO)
+
+Menu Generator: respeta límites FREE; guarda en /my-menus si PRO
+
+Recipe Library: listado filtrable; guardar en /saved-recipes si PRO
+
+SkinChef: chat funcional; 3 usos FREE/día; con imagen solo PRO
+
+Fridge Vision: subida de imagen → /api/upload → IA analiza (mock)
+
+Savings: requiere PRO (usa <RequirePRO/>)
+
+Amazon Fresh: genera “carrito sugerido” con enlaces (mock)
+
+Account: ver plan actual; botón “Gestionar suscripción”
+
+Admin: gated por rol (stub)
+
+QA / QA/Smoke / Previews: pruebas rápidas en desarrollo
+
+¿Cómo lo ejecutas ahora?
+
+Pega los prompts en este orden: A1 → A2 → A3 → A4 → A5 → B1 → B2 → B3 → B4 → B5 → B6 → C1 → (C2 opcional) → D1 → D2.
+
+En Replit, añade Secrets: DATABASE_URL (si usas PG), ALLOWED_ORIGINS, y los de IA si aplican.
+
+npm i en server/ y webapp/ (o desde raíz si monorepo).
+
+Arranca: npm run dev (server) y npm run dev (webapp).
+
+Abre /qa y /qa/smoke para validar humo.

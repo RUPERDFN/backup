@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [20.x]
+    
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Type check
+      run: ./scripts/type-check.sh
+      env:
+        NODE_ENV: test
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+        OPENAI_API_KEY: ${{ secrets.CI_OPENAI_API_KEY }}
+        PERPLEXITY_API_KEY: ${{ secrets.CI_PERPLEXITY_API_KEY }}
+        SESSION_SECRET: ${{ secrets.CI_SESSION_SECRET }}
+        GOOGLE_PLAY_PUBLIC_KEY: ${{ secrets.CI_GOOGLE_PLAY_PUBLIC_KEY }}
+
+    - name: Lint code
+      run: ./scripts/lint.sh
+      env:
+        NODE_ENV: test
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+        OPENAI_API_KEY: ${{ secrets.CI_OPENAI_API_KEY }}
+        PERPLEXITY_API_KEY: ${{ secrets.CI_PERPLEXITY_API_KEY }}
+        SESSION_SECRET: ${{ secrets.CI_SESSION_SECRET }}
+        GOOGLE_PLAY_PUBLIC_KEY: ${{ secrets.CI_GOOGLE_PLAY_PUBLIC_KEY }}
+
+    - name: Run tests
+      run: ./scripts/test.sh
+      env:
+        NODE_ENV: test
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+        OPENAI_API_KEY: ${{ secrets.CI_OPENAI_API_KEY }}
+        PERPLEXITY_API_KEY: ${{ secrets.CI_PERPLEXITY_API_KEY }}
+        SESSION_SECRET: ${{ secrets.CI_SESSION_SECRET }}
+        GOOGLE_PLAY_PUBLIC_KEY: ${{ secrets.CI_GOOGLE_PLAY_PUBLIC_KEY }}
+
+    - name: Build project
+      run: npm run build
+      env:
+        NODE_ENV: production
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+        OPENAI_API_KEY: ${{ secrets.CI_OPENAI_API_KEY }}
+        PERPLEXITY_API_KEY: ${{ secrets.CI_PERPLEXITY_API_KEY }}
+        SESSION_SECRET: ${{ secrets.CI_SESSION_SECRET }}
+        GOOGLE_PLAY_PUBLIC_KEY: ${{ secrets.CI_GOOGLE_PLAY_PUBLIC_KEY }}

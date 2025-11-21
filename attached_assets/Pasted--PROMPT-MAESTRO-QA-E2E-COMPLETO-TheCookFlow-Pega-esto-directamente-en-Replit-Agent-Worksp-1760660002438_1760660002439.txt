@@ -1,0 +1,246 @@
+🧪 PROMPT MAESTRO — QA E2E COMPLETO (TheCookFlow)
+
+👉 Pega esto directamente en Replit (Agent/Workspace).
+Este script probará toda la app end-to-end.
+
+1️⃣ Dependencias
+
+Ejecuta en tu shell Replit:
+
+npm i -D @playwright/test
+npx playwright install --with-deps
+
+2️⃣ Archivo de configuración general
+
+playwright.config.ts
+
+import { defineConfig, devices } from '@playwright/test';
+import 'dotenv/config';
+
+export default defineConfig({
+  testDir: 'tools/qa/e2e',
+  timeout: 120_000,
+  retries: 0,
+  use: {
+    baseURL: process.env.QA_WEB_BASE || 'http://localhost:5173',
+    headless: true,
+    ignoreHTTPSErrors: true,
+    video: 'on-first-retry',
+  },
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
+  ],
+});
+
+3️⃣ Script de prueba completo
+
+tools/qa/e2e/thecookflow-full.e2e.spec.ts
+
+import { test, expect } from "@playwright/test";
+
+test.describe("🌍 TheCookFlow — flujo completo Freemium → PRO", () => {
+  test.beforeEach(async ({ page }) => {
+    // Simular el puente Android (Billing + Ads)
+    await page.addInitScript(() => {
+      (window as any).Android = {
+        getUserId: () => "e2e-user",
+        openSubscription: () => {
+          console.log("💳 Simulación Play Billing: prueba gratuita iniciada");
+          (window as any).__purchaseTriggered = true;
+        },
+        setPro: (flag: boolean) => {
+          console.log(`👑 Modo PRO: ${flag}`);
+          (window as any).__isPro = flag;
+        },
+      };
+    });
+  });
+
+  test("✅ Registro → Trial → Cuestionario+Foto → Menú → Lista → Ads → PRO → Cancelación", async ({ page }) => {
+    const base = process.env.QA_WEB_BASE || "http://localhost:5173";
+    const API = process.env.QA_API_BASE || "http://localhost:3000";
+    const userId = "e2e-user";
+
+    console.log("🌐 URL Web:", base);
+    console.log("🔌 URL API:", API);
+
+    // 1️⃣ Registro
+    await page.goto(`${base}/register`);
+    await page.getByRole("textbox", { name: /email/i }).fill(`qa_${Date.now()}@tcf.test`);
+    await page.getByRole("textbox", { name: /contraseña|password/i }).fill("123456");
+    await page.getByRole("button", { name: /registrar|crear|continuar/i }).click();
+    await page.waitForLoadState("networkidle");
+    console.log("✅ Registro completado");
+
+    // 2️⃣ Activar prueba gratuita
+    await page.goto(`${base}/pricing`);
+    await page.getByRole("button", { name: /prueba gratuita|activar prueba/i }).click();
+    await expect(async () => {
+      const triggered = await page.evaluate(() => window.__purchaseTriggered);
+      expect(triggered).toBeTruthy();
+    }).toPass();
+    console.log("✅ Prueba gratuita activada (mock)");
+
+    // 3️⃣ Cuestionario
+    await page.goto(`${base}/questionnaire`);
+    await page.getByLabel(/personas/i).fill("2");
+    await page.getByLabel(/presupuesto/i).fill("25");
+    await page.getByLabel(/tiempo/i).selectOption("rapido");
+    await page.getByLabel(/objetivo/i).selectOption("ahorro");
+
+    // Subir foto de nevera (simulada)
+    const fileChooserPromise = page.waitForEvent("filechooser");
+    await page.getByRole("button", { name: /subir foto|nevera/i }).click();
+    const fc = await fileChooserPromise;
+    const buf = Buffer.from("89504e470d0a1a0a", "hex");
+    await fc.setFiles({ name: "fridge.png", mimeType: "image/png", buffer: buf });
+    await page.getByRole("button", { name: /guardar|continuar/i }).click();
+    await page.waitForTimeout(500);
+    console.log("✅ Cuestionario completado con foto");
+
+    // 4️⃣ Generar primer menú
+    await page.goto(`${base}/menu-generator`);
+    await page.getByRole("button", { name: /generar/i }).click();
+    await page.waitForSelector("text=✅ Menú generado", { timeout: 25_000 });
+    console.log("✅ Primer menú generado correctamente");
+
+    // 5️⃣ Ver menú semanal
+    await page.goto(`${base}/menu-generated`);
+    await expect(page.getByText(/Lunes|Martes|Mi[eé]rcoles|Jueves|Viernes/)).toBeVisible();
+    console.log("✅ Menú semanal visible");
+
+    // 6️⃣ Generar lista de la compra
+    await page.goto(`${base}/lista`);
+    await expect(page.getByText(/Verduras|Despensa|Prote[ií]na/i)).toBeVisible();
+    console.log("✅ Lista de la compra generada");
+
+    // 7️⃣ Simular fin de trial → plan FREE
+    await page.evaluate(async (API) => {
+      await fetch(`${API}/api/billing/cancel`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: "e2e-user" }),
+      });
+    }, API);
+    await page.waitForTimeout(500);
+    console.log("⚙️ Trial cancelado → modo FREE");
+
+    // 8️⃣ Intentar otro menú (debe pedir ver anuncio)
+    await page.goto(`${base}/menu-generator`);
+    await page.getByRole("button", { name: /generar/i }).click();
+    await expect(page.locator("text=Debes ver un anuncio")).toBeVisible();
+    console.log("✅ Límite detectado → se requiere anuncio");
+
+    // 9️⃣ Simular anuncio y desbloqueo
+    await page.evaluate(async (API) => {
+      await fetch(`${API}/api/unlock-after-ad`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: "e2e-user" }),
+      });
+    }, API);
+    await page.waitForTimeout(500);
+    await page.getByRole("button", { name: /generar/i }).click();
+    await page.waitForSelector("text=✅ Menú generado", { timeout: 20_000 });
+    console.log("✅ Desbloqueo tras anuncio funcionando");
+
+    // 🔟 Simular compra PRO (deeplink)
+    await page.evaluate(() => {
+      window.dispatchEvent(new CustomEvent("tcf:deeplink", { detail: { userId: "e2e-user", token: "abcOK" } }));
+    });
+    await page.waitForTimeout(1000);
+    const pro = await page.evaluate(() => window.__isPro);
+    expect(pro).toBeTruthy();
+    console.log("✅ Compra verificada → plan PRO activo");
+
+    // 1️⃣1️⃣ Verificar generación ilimitada (ya sin ads)
+    await page.goto(`${base}/menu-generator`);
+    await page.getByRole("button", { name: /generar/i }).click();
+    await page.waitForSelector("text=✅ Menú generado", { timeout: 20_000 });
+    console.log("✅ Generación ilimitada funcionando");
+
+    // 1️⃣2️⃣ Cancelar suscripción final
+    await page.evaluate(async (API) => {
+      await fetch(`${API}/api/billing/cancel`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: "e2e-user" }),
+      });
+    }, API);
+    await page.waitForTimeout(500);
+    console.log("✅ Suscripción cancelada correctamente");
+
+    console.log("🎉 TEST E2E COMPLETO EXITOSO 🚀");
+  });
+});
+
+4️⃣ Comando de ejecución
+
+Ejecuta el test en Replit:
+
+npx playwright test tools/qa/e2e/thecookflow-full.e2e.spec.ts
+
+
+O añade un script en package.json:
+
+"qa:e2e:full": "npx playwright test tools/qa/e2e/thecookflow-full.e2e.spec.ts"
+
+
+y luego:
+
+npm run qa:e2e:full
+
+5️⃣ Qué prueba exactamente este E2E
+Etapa	Acción	Resultado esperado
+🟢 Registro	Formulario completo y redirección exitosa.	Usuario creado.
+💳 Inicio prueba gratuita	Simula Google Play Billing.	window.__purchaseTriggered = true.
+📋 Cuestionario completo + foto nevera	Rellena datos, sube foto y guarda.	Respuestas guardadas correctamente.
+🍳 Generar primer menú	IA crea menú semanal.	Muestra “✅ Menú generado”.
+📅 Ver menú y lista compra	Tabla semanal + lista agrupada.	Todo visible correctamente.
+🧱 Fin de trial → FREE	API /api/billing/cancel ejecutada.	Plan pasa a “free”.
+🚫 Límite alcanzado	Intenta otro menú → muestra “Debes ver un anuncio”.	Bloqueo confirmado.
+🎬 Anuncio visto (rewarded)	Simula /api/unlock-after-ad.	Nuevo menú permitido.
+👑 Compra PRO (deeplink)	Dispara evento tcf:deeplink.	Plan PRO activo, __isPro = true.
+⚡ Generación ilimitada	Puede crear menús sin límite.	Sin anuncios ni bloqueos.
+❌ Cancelación final	/api/billing/cancel ejecutado.	Vuelve a plan FREE.
+6️⃣ Ejemplo de salida esperada en consola
+🌐 URL Web: http://localhost:5173
+🔌 URL API: http://localhost:3000
+✅ Registro completado
+✅ Prueba gratuita activada (mock)
+✅ Cuestionario completado con foto
+✅ Primer menú generado correctamente
+✅ Menú semanal visible
+✅ Lista de la compra generada
+⚙️ Trial cancelado → modo FREE
+✅ Límite detectado → se requiere anuncio
+✅ Desbloqueo tras anuncio funcionando
+✅ Compra verificada → plan PRO activo
+✅ Generación ilimitada funcionando
+✅ Suscripción cancelada correctamente
+🎉 TEST E2E COMPLETO EXITOSO 🚀
+
+7️⃣ Notas finales
+
+El test es autónomo y no destruye datos reales, usa un usuario temporal e2e-user.
+
+Puedes ejecutarlo tantas veces como quieras.
+
+Si tienes variables distintas para URLs, crea un .env.qa:
+
+QA_WEB_BASE=https://app.thecookflow.com
+QA_API_BASE=https://api.thecookflow.com
+
+
+✅ Con este E2E:
+
+Se validan todas las funciones del modelo Freemium → PRO.
+
+Se comprueba la IA (menús, recetas, listas).
+
+Se testea la integración con anuncios y pagos.
+
+Se asegura que el flujo del usuario real funciona de principio a fin.

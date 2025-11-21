@@ -1,0 +1,54 @@
+{
+  "folders": [
+    {
+      "name": "🚀 TheCookFlow",
+      "path": "."
+    },
+    {
+      "name": "📱 Client",
+      "path": "./client"
+    },
+    {
+      "name": "🖥️ Server",
+      "path": "./server"
+    },
+    {
+      "name": "🔄 Shared",
+      "path": "./shared"
+    },
+    {
+      "name": "🤖 Android",
+      "path": "./android"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/node_modules": true,
+      "**/.git": false,
+      "**/dist": false,
+      "**/build": true
+    },
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "eslint.workingDirectories": [
+      "./client",
+      "./server"
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [],
+    "compounds": []
+  },
+  "extensions": {
+    "recommendations": [
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode",
+      "bradlc.vscode-tailwindcss",
+      "ms-vscode.vscode-typescript-next"
+    ]
+  }
+}

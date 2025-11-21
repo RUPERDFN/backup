@@ -1,0 +1,33 @@
+
+# GUIÓN VIDEO PROMOCIONAL THECOOKFLOW (30 segundos)
+
+## Escena 1 (0-5s): Problema
+- Visual: Persona confundida frente a frigorífico vacío
+- Texto: "¿Qué cocinar esta semana?"
+- Narración: "¿Cansado de no saber qué cocinar?"
+
+## Escena 2 (5-10s): Solución
+- Visual: Apertura de TheCookFlow en móvil
+- Texto: "TheCookFlow - IA para tu cocina"
+- Narración: "TheCookFlow usa IA para planificar tus menús"
+
+## Escena 3 (10-20s): Características
+- Visual: Pantalla de generación de menú
+- Texto superpuesto:
+  * "Menús personalizados"
+  * "Lista de compras automática"
+  * "Integración Amazon Fresh"
+- Narración: "Menús personalizados, listas automáticas, compra directa"
+
+## Escena 4 (20-25s): Resultado
+- Visual: Familia feliz cocinando
+- Texto: "Cocina sin estrés"
+- Narración: "Cocina sin estrés, come mejor"
+
+## Escena 5 (25-30s): Call-to-Action
+- Visual: Logo TheCookFlow + Play Store
+- Texto: "Descarga gratis - 7 días premium"
+- Narración: "Descarga TheCookFlow gratis"
+
+## Música: Upbeat, familiar, cocina/hogar
+## Colores: Verde pizarra (#2d4d3a), Tiza (#a8d5ba), Blanco tiza (#f5f5dc)

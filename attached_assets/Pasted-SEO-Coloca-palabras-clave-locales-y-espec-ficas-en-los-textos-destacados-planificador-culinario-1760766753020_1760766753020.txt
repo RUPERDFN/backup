@@ -1,0 +1,63 @@
+SEO
+
+Coloca palabras clave locales y específicas en los textos destacados (“planificador culinario en Salamanca”, “menús IA para cocinas españolas”) para captar tráfico local y temático.​
+
+Usa títulos y meta-descripciones optimizadas en cada sección (“Genera tu menú semanal con IA – TheCookFlow”).
+
+Implementa URLs cortas y descriptivas que ayuden a posicionar cada funcionalidad del app.​
+
+Crea contenido útil y educativo en blogs: recetas, consejos de cocina, tutoriales de uso del app, incluso en formato vídeo y PDF – esto atrae usuarios por tráfico orgánico y se puede indexar.​
+
+Los menús y listas de recetas deberían ser indexables por Google para captar consultas de usuarios buscando ideas culinarias.
+
+Optimiza imágenes con etiquetas ALT descriptivas y reduce su peso para mejorar la carga y el SEO mobile.
+
+Solicita reseñas en Google My Business o tiendas (Play Store) y responde a ellas, sumando reputación y posicionamiento.​
+
+Incluye un apartado visible para preguntas frecuentes (FAQ), síntesis de funcionalidades y testimonios.
+
+Marketing
+
+Impulsa campañas de email segmentadas, recomendando menús personalizados, ofertas y acceso anticipado a nuevas funciones (usa nombres propios y preferencias).​
+
+Activa un blog y redes sociales (Instagram, Facebook, TikTok) alineadas con la estética tiza-pizarra, compartiendo recetas visuales, trucos culinarios y sorteos mensuales para fomentar comunidad.
+
+Integra vídeos cortos y directos con tips de cocina y demostraciones usando la app.​
+
+Haz colaboraciones con influencers, chefs y foodies tanto para reseñar el app como para crear contenido (vídeos y posts).​
+
+Anima a los usuarios a compartir sus menús/recetas en redes con hashtags propios (#TheCookFlowRecetas) y destácalos en la plataforma.
+
+Crea promociones para usuarios nuevos, pruebas gratuitas de funciones premium y recompensas por uso frecuente (“Desbloquea un menú secreto tras 10 planificaciones”).
+
+Participa en foros culinarios y webs gastronómicas para captar feedback y sumar autoridad.​
+
+Añade landing pages bien optimizadas para cada funcionalidad: generación IA, lista de la compra, asistente de chef, etc.
+
+Experiencia de Usuario (UX)
+
+Simplifica formularios: pide solo datos esenciales, usa ejemplos y validaciones visuales (“ej: nombre, mail, contraseña”).​
+
+Gamifica la navegación: otorga logros por interacción (“Primer menú, Chef Diamante, Sin desperdicio”).
+
+Añade onboarding interactivo y animado respetando la estética tiza/pizarra (puedes jugar con distintos tonos: verdes, azules, rosados tipo “pizarra moderna” en los fondos).
+
+Mejora la navegación entre cuestionarios con botones grandes, feedback visual y textos motivadores (“¡Tu menú inteligente está listo!”).​
+
+Implementa mensajes de ayuda y tooltips en pasos clave del registro y planificación; añade un chatbot visible para dudas rápidas (“SkinChef” como asistente virtual).​
+
+Ofrece modo oscuro y claro, con paletas flexibles dentro del concepto pizarra para personalización por el usuario.
+
+Icons, gráficos y fondos deben ser de estilo “chalk art”, combinando elementos de pizarra pero actualizados con colores vibrantes o pastel para mayor confort y modernidad.​
+
+Destaca menús con ilustraciones tipo doodle de tiza, usando fondos de pizarra pero variando el color de la “tiza” según cada sección/interacción (“tiza naranja para recetas, azul para ayuda, verde para consejos”).
+
+Añade accesibilidad: contraste alto, textos legibles, opciones para usuarios con dificultades visuales.
+
+Bonus Detalles Estéticos
+
+Integra ilustraciones vectoriales o iconos de línea de tiza actuales, incluso animaciones sencillas estilo trazo, en menús y pantallas de carga para darle un toque más profesional y ameno.​
+
+Ofrece temas alternativos (pizarra clásica, pizarra digital, pizarra moderna) para que el usuario elija su estilo preferido sin perder coherencia visual.
+
+Estas acciones fortalecerán el posicionamiento de la app, la retención de usuarios y la diferenciación frente a la competencia, todo en armonía con tu estética tiza/pizarra adaptada a tendencias de diseño actuales.

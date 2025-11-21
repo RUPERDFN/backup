@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme -->
+    <style name="Theme.TheCookFlow" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/chalk_green</item>
+        <item name="colorPrimaryVariant">@color/chalk_green_dark</item>
+        <item name="colorOnPrimary">@color/dark_green</item>
+        
+        <item name="colorSecondary">@color/chalk_green</item>
+        <item name="colorSecondaryVariant">@color/chalk_green_dark</item>
+        <item name="colorOnSecondary">@color/dark_green</item>
+        
+        <item name="android:statusBarColor">@color/dark_green</item>
+        <item name="android:navigationBarColor">@color/dark_green</item>
+    </style>
+
+    <!-- NoActionBar theme for MainActivity -->
+    <style name="Theme.TheCookFlow.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <!-- Splash theme -->
+    <style name="Theme.TheCookFlow.Splash">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@color/dark_green</item>
+    </style>
+</resources>

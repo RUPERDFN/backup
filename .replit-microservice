@@ -1,0 +1,12 @@
+run = "cd server-microservice && PORT=3002 node index.js"
+
+[[workflows]]
+name = "Microservice"
+author = "replit"
+
+[workflows.metadata]
+agentRequireRestartOnFileChange = false
+
+[[workflows.tasks]]
+name = "dev"
+command = "cd server-microservice && PORT=3002 node index.js"

@@ -1,0 +1,133 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.android'
+// Add this line
+apply plugin: 'com.google.gms.google-services'
+
+android {
+    namespace 'com.cookflow.app'
+    compileSdk 35  // Android 15 para compatibilidad completa
+
+    defaultConfig {
+        applicationId "com.cookflow.app"
+        minSdk 24
+        targetSdk 35  // Android 15 target
+        versionCode 2  // Incrementado para nueva versión
+        versionName "1.1.0"  // Nueva versión compatible con Android 15
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        
+        // AdMob Configuration - PRODUCTION IDs
+        manifestPlaceholders = [
+            ADMOB_APP_ID: "ca-app-pub-7982290772698799~6190992844"
+        ]
+        
+        // Production AdMob Unit IDs
+        buildConfigField "String", "BANNER_AD_UNIT_ID",
+            "\"ca-app-pub-7982290772698799/7257867786\""
+        buildConfigField "String", "INTERSTITIAL_AD_UNIT_ID", 
+            "\"ca-app-pub-7982290772698799/8325501869\""
+        buildConfigField "String", "APP_OPEN_AD_UNIT_ID",
+            "\"ca-app-pub-7982290772698799/2139367466\""
+        buildConfigField "String", "NATIVE_AD_UNIT_ID",
+            "\"ca-app-pub-7982290772698799/1052967761\""
+        buildConfigField "String", "REWARDED_AD_UNIT_ID",
+            "\"ca-app-pub-7982290772698799/1052967761\"" // Using native as rewarded for now
+            
+        // Google Play Billing - Product IDs
+        buildConfigField "String", "PREMIUM_MONTHLY_SKU", "\"premium_monthly\""
+        buildConfigField "String", "PREMIUM_YEARLY_SKU", "\"premium_yearly\""
+    }
+
+    signingConfigs {
+        release {
+            storeFile file(project.findProperty("MYAPP_UPLOAD_STORE_FILE") ?: "")
+            storePassword project.findProperty("MYAPP_UPLOAD_STORE_PASSWORD") ?: ""
+            keyAlias project.findProperty("MYAPP_UPLOAD_KEY_ALIAS") ?: ""
+            keyPassword project.findProperty("MYAPP_UPLOAD_KEY_PASSWORD") ?: ""
+        }
+        debug {
+            // Debug keystore (auto-generated)
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            // Ensure manifest permissions are preserved
+            manifestPlaceholders = [:]
+        }
+    }
+    
+    bundle {
+        density {
+            enableSplit true
+        }
+        abi {
+            enableSplit true
+        }
+        language {
+            enableSplit false
+        }
+    }
+    
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        viewBinding true
+        buildConfig true  // Required for BuildConfig fields
+    }
+}
+
+dependencies {
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:32.8.1')
+    
+    // add the Firebase SDK for Google Analytics
+    implementation 'com.google.firebase:firebase-analytics'
+    // add SDKs for any other desired Firebase products
+    // https://firebase.google.com/docs/android/setup#available-libraries
+    
+    // AndroidX Core - Downgraded for compatibility
+    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.lifecycle:lifecycle-process:2.8.6'
+    
+    // Material Components - Actualizado para eliminar APIs obsoletas de Android 15
+    implementation 'com.google.android.material:material:1.12.0'
+    
+    // Layout and UI Components
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
+    implementation 'androidx.webkit:webkit:1.12.1'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    
+    // Google Play Billing Library v7.0.0 (Stable version)
+    def billing_version = "7.0.0"
+    implementation "com.android.billingclient:billing:$billing_version"
+    implementation "com.android.billingclient:billing-ktx:$billing_version"
+    
+    // Google Play Services - Compatible with Kotlin 1.9
+    implementation 'com.google.android.gms:play-services-ads:23.3.0'
+    implementation 'com.google.android.gms:play-services-auth:21.2.0'
+    
+    // User Messaging Platform (UMP) para GDPR compliance
+    implementation 'com.google.android.ump:user-messaging-platform:2.2.0'
+    
+    // Google Play Integrity API
+    implementation 'com.google.android.play:integrity:1.4.0'
+    
+    // OkHttp for network requests (backend verification)
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    
+    // Testing dependencies
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+}

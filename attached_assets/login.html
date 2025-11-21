@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TheCookFlow - Acceso</title>
+  <link rel="stylesheet" href="estilos.css">
+  <style>
+    @font-face {
+      font-family: 'Cheveuxdange';
+      src: url('Cheveuxdange.ttf') format('truetype');
+      font-display: swap;
+    }
+    body {
+      font-family: 'Cheveuxdange', sans-serif;
+      background-color: #0f0f0f !important;
+      background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('textura-grunge-oscura.jpg') !important;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-position: center;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+
+
+    .back-link {
+      position: absolute;
+      top: 2rem;
+      left: 2rem;
+      color: #4a9b8e;
+      text-decoration: none;
+      font-size: 1.1rem;
+      opacity: 0.8;
+      z-index: 10;
+    }
+    .back-link:hover {
+      opacity: 1;
+    }
+
+    .logo {
+      width: 350px;
+      margin: 0 auto 1.5rem;
+      display: block;
+      filter: brightness(1.1) contrast(1.05);
+      z-index: 5;
+      position: relative;
+    }
+
+    .login-container {
+      background: rgba(0, 0, 0, 0.4);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 3rem;
+      max-width: 450px;
+      width: 100%;
+      backdrop-filter: blur(8px);
+      z-index: 5;
+      position: relative;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .brand-text {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .brand-text .highlight {
+      color: #ff4444;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+      font-weight: normal;
+    }
+
+    .form-tabs {
+      display: flex;
+      margin-bottom: 2rem;
+      border-radius: 25px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .tab-button {
+      flex: 1;
+      padding: 1rem;
+      background: transparent;
+      color: white;
+      border: none;
+      font-family: 'Cheveuxdange';
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .tab-button.active {
+      background: #4a9b8e;
+      color: white;
+    }
+
+    .form-content {
+      display: none;
+    }
+
+    .form-content.active {
+      display: block;
+    }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 1rem;
+      font-family: 'Cheveuxdange';
+      font-size: 1rem;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: #4a9b8e;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .input-group input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .btn-principal {
+      width: 100%;
+      background: #4a9b8e;
+      color: white;
+      padding: 1.2rem;
+      border-radius: 25px;
+      font-size: 1.3rem;
+      margin: 1.5rem 0;
+      font-family: 'Cheveuxdange';
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(74, 155, 142, 0.3);
+    }
+
+    .btn-principal:hover:not(:disabled) {
+      background: #43a491;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(74, 155, 142, 0.4);
+    }
+
+    .btn-principal:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+
+
+    .forgot-link {
+      color: #4a9b8e;
+      text-decoration: none;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    .forgot-link:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .login-container {
+        padding: 2rem;
+        margin: 1rem;
+      }
+
+      .brand-text {
+        font-size: 2.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+
+  <a href="index.html" class="back-link">← Volver al inicio</a>
+
+  <img src="logo.PNG" alt="Logo TheCookFlow" class="logo">
+
+  <div class="login-container">
+    <div class="brand-text">The Cook<span class="highlight">Flow</span></div>
+    <h2>¿Cómo quieres comer esta semana?</h2>
+
+    <div class="form-tabs">
+      <button class="tab-button active" onclick="showTab('login')">Iniciar Sesión</button>
+      <button class="tab-button" onclick="showTab('register')">Registrarse</button>
+    </div>
+
+    <!-- Formulario de Login -->
+    <div id="login-form" class="form-content active">
+      <form onsubmit="handleLogin(event)">
+        <div class="input-group">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" placeholder="tu@email.com" required>
+        </div>
+        <div class="input-group">
+          <label for="login-password">Contraseña</label>
+          <input type="password" id="login-password" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn-principal">Empezar</button>
+        <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+      </form>
+    </div>
+
+    <!-- Formulario de Registro -->
+    <div id="register-form" class="form-content">
+      <form onsubmit="handleRegister(event)">
+        <div class="input-group">
+          <label for="register-name">Nombre completo</label>
+          <input type="text" id="register-name" placeholder="Tu nombre" required>
+        </div>
+        <div class="input-group">
+          <label for="register-email">Email</label>
+          <input type="email" id="register-email" placeholder="tu@email.com" required>
+        </div>
+        <div class="input-group">
+          <label for="register-password">Contraseña</label>
+          <input type="password" id="register-password" placeholder="••••••••" required>
+        </div>
+        <div class="input-group">
+          <label for="register-confirm">Confirmar contraseña</label>
+          <input type="password" id="register-confirm" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn-principal">Empezar</button>
+      </form>
+    </div>
+
+
+  </div>
+
+  <script>
+    // Función para mostrar mensajes
+    function showMessage(message, type = 'info') {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${type}`;
+      messageDiv.textContent = message;
+      messageDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px;
+        border-radius: 5px;
+        color: white;
+        z-index: 1000;
+        max-width: 300px;
+        font-family: 'Cheveuxdange', sans-serif;
+      `;
+      
+      if (type === 'error') {
+        messageDiv.style.backgroundColor = '#e74c3c';
+      } else if (type === 'success') {
+        messageDiv.style.backgroundColor = '#27ae60';
+      } else {
+        messageDiv.style.backgroundColor = '#3498db';
+      }
+      
+      document.body.appendChild(messageDiv);
+      
+      setTimeout(() => {
+        if (messageDiv.parentNode) {
+          messageDiv.parentNode.removeChild(messageDiv);
+        }
+      }, 5000);
+    }
+    function showTab(tabName) {
+      // Ocultar todos los formularios
+      document.querySelectorAll('.form-content').forEach(form => {
+        form.classList.remove('active');
+      });
+
+      // Remover clase active de todos los botones
+      document.querySelectorAll('.tab-button').forEach(button => {
+        button.classList.remove('active');
+      });
+
+      // Mostrar el formulario seleccionado
+      document.getElementById(tabName + '-form').classList.add('active');
+
+      // Activar el botón correspondiente
+      event.target.classList.add('active');
+    }
+
+    async function handleLogin(event) {
+      event.preventDefault();
+
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+
+      // Mostrar mensaje de carga
+      const button = event.target.querySelector('.btn-principal');
+      const originalText = button.textContent;
+      button.textContent = 'Iniciando sesión...';
+      button.disabled = true;
+
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          // Guardar datos de usuario en localStorage (usando nomenclatura consistente)
+          localStorage.setItem('cookflow_token', data.token);
+          localStorage.setItem('cookflow_user', JSON.stringify(data.user));
+          localStorage.setItem('userLoggedIn', 'true');
+          localStorage.setItem('userId', data.user.id);
+          localStorage.setItem('userEmail', data.user.email);
+          localStorage.setItem('userName', data.user.name);
+
+          // Mostrar mensaje de éxito
+          showMessage('¡Login exitoso! Redirigiendo...', 'success');
+
+          // Redirigir al cuestionario después de 1 segundo
+          setTimeout(() => {
+            window.location.href = 'cuestionario.html';
+          }, 1000);
+        } else {
+          // Mostrar error
+          alert(data.message || 'Error al iniciar sesión');
+          button.textContent = originalText;
+          button.disabled = false;
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error de conexión. Inténtalo de nuevo.');
+        button.textContent = originalText;
+        button.disabled = false;
+      }
+    }
+
+    async function handleRegister(event) {
+      event.preventDefault();
+
+      const name = document.getElementById('register-name').value;
+      const email = document.getElementById('register-email').value;
+      const password = document.getElementById('register-password').value;
+      const confirmPassword = document.getElementById('register-confirm').value;
+
+      if (password !== confirmPassword) {
+        alert('Las contraseñas no coinciden');
+        return;
+      }
+
+      if (password.length < 6) {
+        alert('La contraseña debe tener al menos 6 caracteres');
+        return;
+      }
+
+      // Mostrar mensaje de carga
+      const button = event.target.querySelector('.btn-principal');
+      const originalText = button.textContent;
+      button.textContent = 'Creando cuenta...';
+      button.disabled = true;
+
+      try {
+        const response = await fetch('/api/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: name,
+            email: email,
+            password: password
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          // Guardar datos de usuario en localStorage (usando nomenclatura consistente)
+          localStorage.setItem('cookflow_token', data.token);
+          localStorage.setItem('cookflow_user', JSON.stringify(data.user));
+          localStorage.setItem('userLoggedIn', 'true');
+          localStorage.setItem('userId', data.user.id);
+          localStorage.setItem('userEmail', data.user.email);
+          localStorage.setItem('userName', data.user.name);
+
+          // Mostrar mensaje de éxito
+          showMessage('¡Registro exitoso! Redirigiendo...', 'success');
+
+          // Redirigir al cuestionario después de 1 segundo
+          setTimeout(() => {
+            window.location.href = 'cuestionario.html';
+          }, 1000);
+        } else {
+          // Mostrar error
+          alert(data.message || 'Error al crear la cuenta');
+          button.textContent = originalText;
+          button.disabled = false;
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error de conexión. Inténtalo de nuevo.');
+        button.textContent = originalText;
+        button.disabled = false;
+      }
+    }
+
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "status": "generated",
+  "filename": "thecookflow-qa-report.pdf",
+  "timestamp": "2025-08-12T22:16:57.946Z",
+  "pages": 15,
+  "sections": [
+    "Build Information",
+    "Runtime Status",
+    "Screenshots Gallery",
+    "Monetization Status",
+    "Ad Placements Analysis",
+    "Web Vitals Report",
+    "Smoke Test Results",
+    "Technical Documentation"
+  ],
+  "note": "PDF generation requires wkhtmltopdf or Playwright PDF in production"
+}

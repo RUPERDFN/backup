@@ -1,0 +1,19 @@
+Login Demo OK
+Verificar que el login demo funciona sin errores
+
+FAIL
+Run
+Demo login error: 400: {"error":true,"message":"Unexpected token '\"', \"\"{}\"\" is not valid JSON","statusCode":400,"timestamp":"2025-10-16T23:51:06.396Z","stack":"SyntaxError: Unexpected token '\"', \"\"{}\"\" is not valid JSON\n at JSON.parse (<anonymous>)\n at createStrictSyntaxError (/home/runner/workspace/node_modules/body-parser/lib/types/json.js:169:10)\n at parse (/home/runner/workspace/node_modules/body-parser/lib/types/json.js:86:15)\n at /home/runner/workspace/node_modules/body-parser/lib/read.js:128:18\n at AsyncResource.runInAsyncScope (node:async_hooks:206:9)\n at invokeCallback (/home/runner/workspace/node_modules/raw-body/index.js:238:16)\n at done (/home/runner/workspace/node_modules/raw-body/index.js:227:7)\n at IncomingMessage.onEnd (/home/runner/workspace/node_modules/raw-body/index.js:287:7)\n at IncomingMessage.emit (node:events:524:28)\n at endReadableNT (node:internal/streams/readable:1698:12)\n at process.processTicksAndRejections (node:internal/process/task_queues:82:21)","details":{"expose":true,"statusCode":400,"status":400,"body":"\"{}\"","type":"entity.parse.failed"}}
+
+124ms
+Executed: 1:51:06
+
+Generar Menú OK (<10s)
+Verificar que la generación de menú funciona en menos de 10 segundos
+
+FAIL
+Run
+Menu generation failed: 400: {"error":true,"message":"Unexpected token '\"', \"\"{\\\"dietar\"... is not valid JSON","statusCode":400,"timestamp":"2025-10-16T23:50:51.002Z","stack":"SyntaxError: Unexpected token '\"', \"\"{\\\"dietar\"... is not valid JSON\n at JSON.parse (<anonymous>)\n at createStrictSyntaxError (/home/runner/workspace/node_modules/body-parser/lib/types/json.js:169:10)\n at parse (/home/runner/workspace/node_modules/body-parser/lib/types/json.js:86:15)\n at /home/runner/workspace/node_modules/body-parser/lib/read.js:128:18\n at AsyncResource.runInAsyncScope (node:async_hooks:206:9)\n at invokeCallback (/home/runner/workspace/node_modules/raw-body/index.js:238:16)\n at done (/home/runner/workspace/node_modules/raw-body/index.js:227:7)\n at IncomingMessage.onEnd (/home/runner/workspace/node_modules/raw-body/index.js:287:7)\n at IncomingMessage.emit (node:events:524:28)\n at endReadableNT (node:internal/streams/readable:1698:12)\n at process.processTicksAndRejections (node:internal/process/task_queues:82:21)","details":{"expose":true,"statusCode":400,"status":400,"body":"\"{\\\"dietaryRestrictions\\\":[\\\"vegetarian\\\"],\\\"servings\\\":2,\\\"budget\\\":\\\"medium\\\"}\"","type":"entity.parse.failed"}}
+
+133ms
+Executed: 1:50:50

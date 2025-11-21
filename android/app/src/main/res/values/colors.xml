@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- TheCookFlow Brand Colors -->
+    <color name="dark_green">#2d4d3a</color>
+    <color name="chalk_green">#a8d5ba</color>
+    <color name="chalk_green_dark">#7fb896</color>
+    <color name="chalk_white">#f5f5dc</color>
+    <color name="chalk">#d4d4aa</color>
+    <color name="chalk_red">#ff6b6b</color>
+    
+    <!-- Material Design Colors -->
+    <color name="primary">@color/chalk_green</color>
+    <color name="primary_dark">@color/chalk_green_dark</color>
+    <color name="accent">@color/chalk_red</color>
+    
+    <!-- Background and variations -->
+    <color name="chalk_background">#2d4d3a</color>
+    <color name="chalk_dark">#1a2d21</color>
+    <color name="chalk_white_75">#f5f5dcbf</color>
+    <color name="chalk_white_50">#f5f5dc80</color>
+    
+    <!-- System Colors -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+    
+    <!-- Status Bar -->
+    <color name="status_bar">@color/dark_green</color>
+    <color name="navigation_bar">@color/dark_green</color>
+</resources>

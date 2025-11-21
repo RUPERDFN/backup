@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AdMob Configuration -->
+    <string name="admob_app_id">ca-app-pub-7982290772698799~8888888888</string>
+    
+    <!-- Ad Unit IDs - Replace with your real IDs from AdMob console -->
+    <string name="admob_banner_home">ca-app-pub-7982290772698799/1111111111</string>
+    <string name="admob_banner_recipes">ca-app-pub-7982290772698799/2222222222</string>
+    <string name="admob_interstitial">ca-app-pub-7982290772698799/3333333333</string>
+    <string name="admob_native_feed">ca-app-pub-7982290772698799/4444444444</string>
+    <string name="admob_rewarded">ca-app-pub-7982290772698799/5555555555</string>
+    
+    <!-- Test Mode - Set to false for production -->
+    <bool name="admob_test_mode">false</bool>
+</resources>

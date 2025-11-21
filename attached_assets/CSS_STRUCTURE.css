@@ -1,0 +1,41 @@
+/* TheCookFlow - Estructura CSS Principal */
+
+/* 
+COLORES PRINCIPALES:
+- Fondo base: #0f0f0f
+- Verde principal: #4a9b8e
+- Verde hover: #43a491
+- Texto: white
+- Acentos: #ff6b6b (rojo), #ffc107 (amarillo)
+*/
+
+/* 
+FUENTE PRINCIPAL:
+- Familia: 'Cheveuxdange'
+- Archivo: Cheveuxdange.ttf
+- Fallback: sans-serif
+*/
+
+/* 
+EFECTOS VISUALES:
+- Backdrop-filter: blur(8px-10px)
+- Border-radius: 25px (botones), 15px-20px (contenedores)
+- Box-shadow: rgba con transparencia
+- Transform: translateY(-2px) en hover
+- Transition: all 0.3s ease
+*/
+
+/* 
+LAYOUT RESPONSIVE:
+- Desktop: Grid multi-columna
+- Mobile: Single column (max-width: 768px)
+- Flex layouts con gap: 1rem-2rem
+*/
+
+/* 
+COMPONENTES CLAVE:
+- .btn-principal: Botón verde principal
+- .login-container: Contenedor con vidrio esmerilado
+- .seccion: Secciones principales con separadores
+- .iconos: Grid de iconos con efectos hover
+*/

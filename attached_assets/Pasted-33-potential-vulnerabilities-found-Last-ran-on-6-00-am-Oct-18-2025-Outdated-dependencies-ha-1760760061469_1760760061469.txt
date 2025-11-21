@@ -1,0 +1,71 @@
+33 potential vulnerabilities found.
+Last ran on
+ 
+6:00 am, Oct 18, 2025
+Outdated dependencies have known vulnerabilities
+There are dependencies that have vulnerabilities and may need to be updated.
+These dependencies may cause issues if updated without making additional changes. You can have the Agent update them for you and make any necessary changes.
+flask-cors@4.0.0
+flask-cors@4.0.0
+Detected potential vulnerability
+android/auto_sync.py
+Detected potential vulnerability
+android/auto_sync.py
+Detected potential vulnerability
+android/sync_to_github.py
+Detected potential vulnerability
+android/sync_to_github.py
+Detected potential vulnerability
+attached_assets/google-services (4)_1758722444090.json
+Detected potential vulnerability
+attached_assets/google-services (4)_1758722444090.json
+Detected potential vulnerability
+attached_assets/google-services (4)_1758722444090.json
+Detected potential vulnerability
+attached_assets/google-services (4)_1758722444090.json
+Detected potential vulnerability
+attached_assets/google-services (4)_1758722444090.json
+Detected potential vulnerability
+attached_assets/google-services (4)_1758722444090.json
+Detected potential vulnerability
+attached_assets/thecookflow-d0fdb-98c74c80f1bc_1760671148658.json
+Detected potential vulnerability
+attached_assets/thecookflow-d0fdb-98c74c80f1bc_1760671148658.json
+Detected potential vulnerability
+attached_assets/thecookflow-d0fdb-98c74c80f1bc_1760671148658.json
+Detected potential vulnerability
+configure-env.sh
+Detected potential vulnerability
+configure-env.sh
+Detected potential vulnerability
+deploy-to-vps.sh
+Detected potential vulnerability
+deploy/app-deploy.sh
+Detected potential vulnerability
+deploy/app-deploy.sh
+Detected potential vulnerability
+deploy/app-deploy.sh
+Detected potential vulnerability
+deploy/database-setup.sh
+Detected potential vulnerability
+deploy/deploy-complete.sh
+Detected potential vulnerability
+deploy/nginx-config.sh
+Detected potential vulnerability
+deploy/production-setup.sh
+Detected potential vulnerability
+deploy/production-setup.sh
+Detected potential vulnerability
+server/index.js
+Detected potential vulnerability
+server/routes/plan.ts
+Detected potential vulnerability
+setup_github_token.sh
+Detected potential vulnerability
+simple_sync.sh
+Detected potential vulnerability
+simple_sync.sh
+Detected potential vulnerability
+sync_complete.zip.sh
+Detected potential vulnerability
+sync_complete.zip.sh

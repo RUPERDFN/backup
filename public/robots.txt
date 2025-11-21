@@ -1,0 +1,30 @@
+User-agent: *
+Allow: /
+Disallow: /qa
+Disallow: /qa/
+Disallow: /tour/
+Disallow: /admin
+Disallow: /admin/
+Disallow: /previews/
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://thecookflow.replit.app/sitemap.xml
+
+# SEO-friendly crawling
+Crawl-delay: 1
+
+# Specific rules for common bots
+User-agent: Googlebot
+Allow: /
+Disallow: /qa
+Disallow: /tour/
+Disallow: /admin
+Disallow: /api/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /qa
+Disallow: /tour/
+Disallow: /admin
+Disallow: /api/

@@ -1,0 +1,12 @@
+# ----------------------------------------
+# Enlaces profundos mal configurados
+# ----------------------------------------
+A continuación se muestra una lista de tus principales enlaces profundos mal configurados ordenados por nivel de interacción móvil en los últimos 30 días.
+El informe no contendrá datos si no tienes un flujo web activo en esta propiedad para la actividad web asociada.
+Corrige estos enlaces profundos para mejorar la experiencia de los usuarios finales de dispositivos móviles y dirigir el tráfico a tu aplicación.
+Visita la página de enlaces profundos de Play Console (para enlaces de Android) o el siguiente artículo del Centro de ayuda para obtener más información:
+https://support.google.com/googleplay/android-developer/answer/1246304
+https://support.google.com/analytics/answer/15243451
+# ----------------------------------------
+Aplicación,Plataforma,Enlace profundo mal configurado,Eventos clave,Total de usuarios,Sesiones rebotadas,Sesiones interactuadas,Sesiones,Porcentaje de rebote
+com.cookflow.app,Android,https://thecookflow.com/.*,-,-,-,-,-,-

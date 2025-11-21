@@ -1,0 +1,48 @@
+# Gradle files
+.gradle/
+build/
+*/build/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Log/OS Files
+*.log
+
+# Android Studio generated files and folders
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aab
+output.json
+
+# Keystore files (SECURITY: Never upload these!)
+*.keystore
+*.jks
+
+# Google Services
+google-services.json
+
+# Signed APK/AAB files
+*-release.apk
+*-release.aab
+*-signed.apk
+*-signed.aab
+
+# Debug files
+*-debug.apk
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

@@ -1,0 +1,131 @@
+<!-- Landing Page de TheCookFlow - Estilo cartel en pizarra con acceso a cuestionario -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TheCookFlow - Planifica tus comidas con IA</title>
+  <link rel="stylesheet" href="estilos.css">
+  <style>
+    @font-face {
+      font-family: 'Cheveuxdange';
+      src: url('Cheveuxdange.ttf') format('truetype');
+      font-display: swap;
+    }
+    body {
+      font-family: 'Cheveuxdange', sans-serif;
+      background-color: #0f0f0f !important;
+      background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('textura-grunge-oscura.jpg') !important;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-position: center;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin: 0;
+      min-height: 100vh;
+    }
+    h1 {
+      font-size: 2.6rem;
+      margin-bottom: 1rem;
+    }
+    h2 {
+      font-size: 2rem;
+      margin-top: 3rem;
+    }
+    .logo {
+      width: 350px;
+      margin: 0 auto 1.5rem;
+      display: block;
+    }
+    .btn-principal {
+      display: inline-block;
+      background: #58c2a9;
+      color: white;
+      padding: 1rem 2.5rem;
+      border-radius: 25px;
+      font-size: 1.4rem;
+      margin: 2rem 0;
+      font-family: 'Cheveuxdange';
+      border: none;
+    }
+    .btn-principal:hover {
+      background: #43a491;
+      cursor: pointer;
+    }
+    .seccion {
+      margin: 2rem auto;
+      max-width: 700px;
+    }
+    .bloques {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+    }
+    .bloques div {
+      width: 130px;
+    }
+    .bloques img {
+      width: 70px;
+      height: auto;
+      margin-bottom: 0.5rem;
+    }
+    .app-botones a {
+      display: block;
+      border: 2px solid white;
+      padding: 0.7rem 1.5rem;
+      border-radius: 8px;
+      margin: 0.5rem auto;
+      width: 200px;
+    }
+    .footer {
+      margin-top: 4rem;
+      font-size: 0.9rem;
+    }
+  </style>
+  <script>
+    function iniciarCuestionario() {
+      window.location.href = "login.html";
+    }
+  </script>
+</head>
+<body>
+  <img src="logo.PNG" alt="Logo TheCookFlow" class="logo">
+  <h1>¿Qué quieres comer esta semana?</h1>
+  <button onclick="iniciarCuestionario()" class="btn-principal">Empezar gratis</button>
+
+  <h2>¿Cómo Funciona?</h2>
+  <div class="bloques">
+    <div><p>📝 Contesta<br>algunas preguntas</p></div>
+    <div><p>🍽️ Recibe tu<br>menú personalizado</p></div>
+    <div><p>🛒 Lista de la<br>compra lista</p></div>
+    <div><p>👨‍🍳 Recetas con lo<br>que tienes en la nevera</p></div>
+  </div>
+
+  <div class="seccion">
+    <h2>Funciones</h2>
+    <div class="bloques">
+      <div><p>🤖 IA tipo chef<br>que responde dudas</p></div>
+      <div><p>📋 Lista de compra<br>automática</p></div>
+      <div><p>💰 Comparador de precios<br>por supermercado</p></div>
+      <div><p>🌟 Más de 10.000<br>comidas planificadas</p></div>
+    </div>
+  </div>
+
+  <div class="seccion">
+    <h2>Descarga la App</h2>
+    <div class="app-botones">
+      <a href="#">Android</a>
+      <a href="#">iPhone</a>
+      <a href="#">Versión escritorio</a>
+    </div>
+  </div>
+
+  <div class="footer">
+    <h2>Blog / Recetario</h2>
+    <p><a href="politica-privacidad.html">Política de privacidad</a> · <a href="aviso-legal.html">Aviso legal</a></p>
+  </div>
+</body>
+</html>

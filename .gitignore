@@ -1,0 +1,147 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Production
+dist/
+build/
+*.production
+
+# Testing
+coverage/
+.nyc_output
+
+# Environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Android
+android/build/
+android/.gradle/
+android/app/build/
+
+# SECURITY: Sensitive files - NEVER VERSION THESE
+android/**/keystore*.jks
+**/*.keystore
+**/upload-keystore.jks
+android/app/google-services.json
+android/gradle.properties
+android/app/.gradle/
+android/local.properties
+android/.idea/
+android/*.iml
+android/app/*.iml
+*.apk
+*.aab
+*.hprof
+/captures
+.externalNativeBuild
+.cxx
+
+# Keystores - SECURITY CRITICAL
+*.keystore
+*.jks
+*.p12
+*.key
+*.pem
+
+# Firebase Service Account - SECURITY CRITICAL
+firebase-service-account.json
+**/firebase-service-account*.json
+**/google-services*.json
+**/*service-account*.json
+**/*gserviceaccount*.json
+
+# Attached assets with sensitive credentials
+attached_assets/**/*.json
+attached_assets/**/google-services*.json
+attached_assets/**/*-firebase*.json
+
+# Archives
+*.zip
+*.tar.gz
+*.tar
+*.gz
+*.rar
+*.7z
+
+# Attached assets (cleanup)
+attached_assets/*.zip
+attached_assets/*.tar.gz
+attached_assets/targeted_element_*.png
+
+# Cache
+.cache/
+.parcel-cache/
+.vite/
+.turbo/
+.next/
+web/.next/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv
+.pytest_cache/
+
+# Database
+*.sqlite
+*.sqlite3
+*.db
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+
+# Generated files
+/public/dist/
+/public/build/
+public/previews/
+
+# Replit specific
+.replit
+.upm/
+.config/
+.cache/
+.local/
+
+# Cookies and sessions
+cookies.txt
+sessions/
+
+# Lock files (keep package-lock.json)
+yarn.lock
+pnpm-lock.yaml
+
+# TheCookFlow API - Uploads directory
+uploads

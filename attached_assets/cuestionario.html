@@ -1,0 +1,721 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TheCookFlow - Cuestionario</title>
+  <link rel="stylesheet" href="estilos.css">
+  <style>
+    @font-face {
+      font-family: 'Cheveuxdange';
+      src: url('Cheveuxdange.ttf') format('truetype');
+      font-display: swap;
+    }
+
+    body {
+      font-family: 'Cheveuxdange', sans-serif;
+      background-color: #1a1a1a !important;
+      background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('textura-grunge-oscura.jpg') !important;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-position: center;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      min-height: 100vh;
+      margin: 0;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    
+
+    .header {
+      margin-bottom: 2rem;
+      padding-top: 1rem;
+      position: relative;
+      z-index: 5;
+    }
+
+    h2 {
+      font-size: 2.2rem;
+      color: #f5f5f5;
+      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+      margin-bottom: 2rem;
+      font-weight: normal;
+    }
+
+    h3 {
+      font-size: 1.6rem;
+      color: #4a9b8e;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+      margin: 2rem 0 1rem 0;
+      font-weight: normal;
+    }
+
+    small {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+      display: block;
+      margin-top: 0.5rem;
+    }
+
+    .logo {
+      width: 350px;
+      height: auto;
+      margin: 0 auto 1.5rem;
+      display: block;
+      filter: brightness(1.1) contrast(1.05) drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+    }
+
+    
+
+    .progress-indicator {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 2rem 0;
+    }
+
+    .progress-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.25);
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .progress-dot.active {
+      background: #4a9b8e;
+      transform: scale(1.3);
+      box-shadow: 0 4px 12px rgba(74, 155, 142, 0.4);
+    }
+
+    .progress-dot.completed {
+      background: #43a491;
+      box-shadow: 0 2px 8px rgba(67, 164, 145, 0.3);
+    }
+
+    .pregunta {
+      display: none;
+      max-width: 650px;
+      margin: 0 auto;
+      background: rgba(0, 0, 0, 0.6);
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      border-radius: 25px;
+      padding: 3rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      position: relative;
+      z-index: 5;
+    }
+
+    .pregunta.active {
+      display: block;
+    }
+
+    .input-group {
+      margin: 2rem 0;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 1.2rem;
+      font-family: 'Cheveuxdange';
+      font-size: 1.2rem;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+      text-align: center;
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: #4a9b8e;
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 0 15px rgba(74, 155, 142, 0.3);
+    }
+
+    .input-group input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .opciones {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .opcion {
+      padding: 1.8rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 18px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1.1rem;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .opcion:hover {
+      background: rgba(74, 155, 142, 0.25);
+      border-color: #4a9b8e;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(74, 155, 142, 0.2);
+    }
+
+    .opcion.selected {
+      background: rgba(74, 155, 142, 0.4);
+      border-color: #4a9b8e;
+      transform: scale(1.02) translateY(-2px);
+      box-shadow: 0 8px 30px rgba(74, 155, 142, 0.3);
+    }
+
+    .btn-siguiente {
+      background: linear-gradient(135deg, #4a9b8e 0%, #43a491 100%);
+      color: white;
+      padding: 1.3rem 2.5rem;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      font-family: 'Cheveuxdange';
+      border: none;
+      cursor: pointer;
+      margin-top: 2rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 20px rgba(74, 155, 142, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-siguiente::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-siguiente:hover::before {
+      left: 100%;
+    }
+
+    .btn-siguiente:hover:not(:disabled) {
+      background: linear-gradient(135deg, #43a491 0%, #4a9b8e 100%);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(74, 155, 142, 0.5);
+    }
+
+    .btn-siguiente:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-anterior {
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      padding: 1.3rem 2.5rem;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      font-family: 'Cheveuxdange';
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      cursor: pointer;
+      margin-top: 2rem;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-anterior:hover {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
+    }
+
+    .botones-navegacion {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .botones-navegacion {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .btn-anterior, .btn-siguiente {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+
+    .loading {
+      font-size: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .camara-section {
+      margin: 2rem 0;
+    }
+
+    .opciones-camara {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-camara {
+      background: rgba(74, 155, 142, 0.15);
+      border: 2px solid rgba(74, 155, 142, 0.6);
+      color: white;
+      padding: 1.2rem 1.8rem;
+      border-radius: 20px;
+      font-family: 'Cheveuxdange';
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 4px 15px rgba(74, 155, 142, 0.2);
+    }
+
+    .btn-camara:hover {
+      background: rgba(74, 155, 142, 0.3);
+      border-color: #4a9b8e;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(74, 155, 142, 0.3);
+    }
+
+    .ingredientes-lista {
+      background: rgba(74, 155, 142, 0.15);
+      border: 1px solid rgba(74, 155, 142, 0.3);
+      border-radius: 15px;
+      padding: 2rem;
+      margin-top: 1.5rem;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .ingrediente-item {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 1rem;
+      margin: 0.5rem;
+      border-radius: 20px;
+      display: inline-block;
+      font-size: 0.9rem;
+    }
+
+    .manual-input {
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      padding-top: 2rem;
+    }
+
+    .manual-input h3 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      color: #4a9b8e;
+    }
+
+    @media (max-width: 768px) {
+      .pregunta {
+        padding: 2rem;
+        margin: 1rem;
+      }
+
+      .opciones-camara {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .btn-camara {
+        width: 100%;
+        max-width: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Verificar autenticación -->
+  <script>
+    if (localStorage.getItem('userLoggedIn') !== 'true') {
+      window.location.href = 'login.html';
+    }
+  </script>
+
+  
+
+  <div class="header">
+    <img src="logo.PNG" alt="Logo TheCookFlow" class="logo">
+  </div>
+
+  <!-- Indicador de progreso -->
+  <div class="progress-indicator">
+    <div class="progress-dot active" id="dot-1"></div>
+    <div class="progress-dot" id="dot-2"></div>
+    <div class="progress-dot" id="dot-3"></div>
+    <div class="progress-dot" id="dot-4"></div>
+    <div class="progress-dot" id="dot-5"></div>
+    <div class="progress-dot" id="dot-6"></div>
+    <div class="progress-dot" id="dot-7"></div>
+    <div class="progress-dot" id="dot-8"></div>
+  </div>
+
+  <!-- Pregunta 1: Presupuesto -->
+  <div id="p1" class="pregunta active">
+    <h2>¿Cuál es tu presupuesto semanal para comida?</h2>
+    <div class="input-group">
+      <input type="number" placeholder="Ej: 50" min="10" max="500" required>
+      <small>Euros por semana</small>
+    </div>
+    <div class="botones-navegacion">
+      <button class="btn-siguiente" onclick="siguiente(1)">Siguiente</button>
+    </div>
+  </div>
+
+  <!-- Pregunta 2: Número de comensales -->
+  <div id="p2" class="pregunta">
+    <h2>¿Para cuántas personas vas a cocinar?</h2>
+    <div class="input-group">
+      <input type="number" placeholder="Ej: 2" min="1" max="10" required>
+      <small>Número de comensales</small>
+    </div>
+    <div class="botones-navegacion">
+      <button class="btn-anterior" onclick="anterior(2)">Anterior</button>
+      <button class="btn-siguiente" onclick="siguiente(2)">Siguiente</button>
+    </div>
+  </div>
+
+  <!-- Pregunta 3: Días de la semana -->
+  <div id="p3" class="pregunta">
+    <h2>¿Para cuántos días quieres planificar?</h2>
+    <div class="input-group">
+      <input type="number" placeholder="Ej: 7" min="1" max="7" required>
+      <small>Días de la semana</small>
+    </div>
+    <div class="botones-navegacion">
+      <button class="btn-anterior" onclick="anterior(3)">Anterior</button>
+      <button class="btn-siguiente" onclick="siguiente(3)">Siguiente</button>
+    </div>
+  </div>
+
+  <!-- Pregunta 4: Comidas por día -->
+  <div id="p4" class="pregunta">
+    <h2>¿Cuántas comidas al día quieres planificar?</h2>
+    <div class="opciones">
+      <div class="opcion" onclick="seleccionarOpcion(4, 1)">1 comida (solo almuerzo/cena)</div>
+      <div class="opcion" onclick="seleccionarOpcion(4, 2)">2 comidas (almuerzo y cena)</div>
+      <div class="opcion" onclick="seleccionarOpcion(4, 3)">3 comidas (desayuno, almuerzo y cena)</div>
+    </div>
+    <div class="botones-navegacion">
+      <button class="btn-anterior" onclick="anterior(4)">Anterior</button>
+    </div>
+  </div>
+
+  <!-- Pregunta 5: Tipo de dieta -->
+  <div id="p5" class="pregunta">
+    <h2>¿Sigues algún tipo de dieta especial?</h2>
+    <div class="opciones">
+      <div class="opcion" onclick="seleccionarOpcion(5, 'normal')">Dieta normal (sin restricciones)</div>
+      <div class="opcion" onclick="seleccionarOpcion(5, 'vegetariana')">Vegetariana</div>
+      <div class="opcion" onclick="seleccionarOpcion(5, 'vegana')">Vegana</div>
+      <div class="opcion" onclick="seleccionarOpcion(5, 'keto')">Keto/Cetogénica</div>
+      <div class="opcion" onclick="seleccionarOpcion(5, 'mediterranea')">Mediterránea</div>
+    </div>
+    <div class="botones-navegacion">
+      <button class="btn-anterior" onclick="anterior(5)">Anterior</button>
+    </div>
+  </div>
+
+  <!-- Pregunta 6: Alergias y restricciones -->
+  <div id="p6" class="pregunta">
+    <h2>¿Tienes alergias o alimentos que no puedes comer?</h2>
+    <div class="input-group">
+      <input type="text" placeholder="Ej: nueces, mariscos, lactosa...">
+      <small>Alergias (opcional)</small>
+    </div>
+    <h3>¿Hay algún alimento que no te gusta?</h3>
+    <div class="input-group">
+      <input type="text" placeholder="Ej: brócoli, pescado...">
+      <small>Alimentos no deseados (opcional)</small>
+    </div>
+    <div class="botones-navegacion">
+      <button class="btn-anterior" onclick="anterior(6)">Anterior</button>
+      <button class="btn-siguiente" onclick="siguiente(6)">Siguiente</button>
+    </div>
+  </div>
+
+  <!-- Pregunta 7: Comidas favoritas -->
+  <div id="p7" class="pregunta">
+    <h2>¿Cuáles son tus comidas o ingredientes favoritos?</h2>
+    <div class="input-group">
+      <input type="text" placeholder="Ej: pollo, pasta, verduras asiáticas...">
+      <small>Comidas preferidas (opcional)</small>
+    </div>
+    <div class="botones-navegacion">
+      <button class="btn-anterior" onclick="anterior(7)">Anterior</button>
+      <button class="btn-siguiente" onclick="siguiente(7)">Siguiente</button>
+    </div>
+  </div>
+
+  <!-- Pregunta 8: Ingredientes disponibles -->
+  <div id="p8" class="pregunta">
+    <h2>¿Qué ingredientes tienes disponibles en casa?</h2>
+    
+    <div class="camara-section">
+      <h3>Análisis automático</h3>
+      <div class="opciones-camara">
+        <button class="btn-camara" onclick="abrirCamara()">📷 Tomar foto de nevera</button>
+        <button class="btn-camara" onclick="subirImagen()">📁 Subir imagen</button>
+      </div>
+      
+      <div id="ingredientes-detectados" class="ingredientes-lista" style="display: none;">
+        <h4>Ingredientes detectados:</h4>
+        <div id="lista-ingredientes"></div>
+      </div>
+    </div>
+
+    <div class="manual-input">
+      <h3>O escríbelos manualmente</h3>
+      <div class="input-group">
+        <input type="text" placeholder="Ej: tomates, queso, huevos, pollo...">
+        <small>Ingredientes disponibles (separados por comas)</small>
+      </div>
+    </div>
+
+    <div class="botones-navegacion">
+      <button class="btn-anterior" onclick="anterior(8)">Anterior</button>
+      <button class="btn-siguiente" onclick="generarMenu()">Generar mi menú</button>
+    </div>
+  </div>
+
+  <!-- Pantalla de carga -->
+  <div id="loading" class="pregunta">
+    <div class="loading">
+      <h2>🧠 Generando tu menú personalizado...</h2>
+      <p>Esto puede tomar unos segundos</p>
+    </div>
+  </div>
+
+  <input type="file" id="file-input" accept="image/*" style="display: none;" onchange="procesarImagen(this)">
+
+  <script>
+    let preguntaActual = 1;
+    let respuestas = {};
+    let ingredientesDetectados = [];
+
+    function siguiente(pregunta) {
+      // Obtener valor de la pregunta actual
+      const input = document.querySelector(`#p${pregunta} input`);
+      if (input && input.required && !input.value.trim()) {
+        alert('Por favor completa este campo antes de continuar.');
+        return;
+      }
+
+      if (input) {
+        respuestas[getFieldName(pregunta)] = input.value.trim();
+      }
+
+      // Avanzar a la siguiente pregunta
+      if (pregunta < 8) {
+        mostrarPregunta(pregunta + 1);
+      }
+    }
+
+    function seleccionarOpcion(pregunta, valor) {
+      // Remover selección previa
+      document.querySelectorAll(`#p${pregunta} .opcion`).forEach(opt => {
+        opt.classList.remove('selected');
+      });
+
+      // Seleccionar opción actual
+      event.target.classList.add('selected');
+      respuestas[getFieldName(pregunta)] = valor;
+
+      // Auto-avanzar después de 1 segundo
+      setTimeout(() => {
+        if (pregunta < 8) {
+          mostrarPregunta(pregunta + 1);
+        }
+      }, 1000);
+    }
+
+    function anterior(pregunta) {
+      if (pregunta > 1) {
+        mostrarPregunta(pregunta - 1);
+      }
+    }
+
+    function mostrarPregunta(numero) {
+      // Ocultar pregunta actual
+      document.querySelector('.pregunta.active').classList.remove('active');
+      
+      // Mostrar nueva pregunta
+      document.getElementById(`p${numero}`).classList.add('active');
+      
+      // Actualizar indicadores de progreso
+      actualizarProgreso(numero);
+      
+      preguntaActual = numero;
+    }
+
+    function actualizarProgreso(numero) {
+      for (let i = 1; i <= 8; i++) {
+        const dot = document.getElementById(`dot-${i}`);
+        if (i < numero) {
+          dot.classList.add('completed');
+          dot.classList.remove('active');
+        } else if (i === numero) {
+          dot.classList.add('active');
+          dot.classList.remove('completed');
+        } else {
+          dot.classList.remove('active', 'completed');
+        }
+      }
+    }
+
+    function getFieldName(pregunta) {
+      const campos = {
+        1: 'presupuesto',
+        2: 'comensales', 
+        3: 'dias',
+        4: 'comidas_dia',
+        5: 'dieta',
+        6: 'alergias',
+        7: 'preferidos',
+        8: 'ingredientesDisponibles'
+      };
+      return campos[pregunta];
+    }
+
+    function abrirCamara() {
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        // Implementar captura de cámara
+        alert('Función de cámara en desarrollo. Por favor, usa "Subir imagen" o escribe manualmente.');
+      } else {
+        alert('Tu navegador no soporta acceso a la cámara. Usa "Subir imagen" o escribe manualmente.');
+      }
+    }
+
+    function subirImagen() {
+      document.getElementById('file-input').click();
+    }
+
+    async function procesarImagen(input) {
+      if (input.files && input.files[0]) {
+        const formData = new FormData();
+        formData.append('image', input.files[0]);
+
+        try {
+          const response = await fetch('/api/analyze-fridge-image', {
+            method: 'POST',
+            body: formData
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            ingredientesDetectados = data.ingredientes;
+            mostrarIngredientesDetectados(data.ingredientes);
+          } else {
+            alert('Error al analizar la imagen: ' + data.message);
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('Error al procesar la imagen');
+        }
+      }
+    }
+
+    function mostrarIngredientesDetectados(ingredientes) {
+      const container = document.getElementById('ingredientes-detectados');
+      const lista = document.getElementById('lista-ingredientes');
+      
+      lista.innerHTML = '';
+      ingredientes.forEach(ingrediente => {
+        const span = document.createElement('span');
+        span.className = 'ingrediente-item';
+        span.textContent = ingrediente;
+        lista.appendChild(span);
+      });
+
+      container.style.display = 'block';
+      respuestas.ingredientesDisponibles = ingredientes.join(', ');
+    }
+
+    async function generarMenu() {
+      // Recoger última respuesta si existe
+      const ultimoInput = document.querySelector('#p8 .input-group input');
+      if (ultimoInput && ultimoInput.value.trim()) {
+        respuestas.ingredientesDisponibles = ultimoInput.value.trim();
+      }
+
+      // Validar que tenemos respuestas básicas
+      if (!respuestas.presupuesto || !respuestas.comensales || !respuestas.dias || !respuestas.comidas_dia) {
+        alert('Por favor completa todas las preguntas requeridas.');
+        return;
+      }
+
+      // Mostrar pantalla de carga
+      document.querySelector('.pregunta.active').classList.remove('active');
+      document.getElementById('loading').classList.add('active');
+
+      try {
+        const response = await fetch('/api/generate-menu', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            respuestas: respuestas
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          // Guardar menú en localStorage
+          localStorage.setItem('menuGenerado', JSON.stringify(data.menu));
+          
+          // Redirigir a la página del menú
+          window.location.href = 'menu.html';
+        } else {
+          throw new Error(data.message || 'Error al generar menú');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error al generar el menú: ' + error.message);
+        
+        // Volver a la pregunta anterior
+        document.getElementById('loading').classList.remove('active');
+        document.getElementById('p8').classList.add('active');
+      }
+    }
+
+    // Manejar tecla Enter en inputs
+    document.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        const activeInput = document.querySelector('.pregunta.active input');
+        if (activeInput && preguntaActual <= 3) {
+          siguiente(preguntaActual);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

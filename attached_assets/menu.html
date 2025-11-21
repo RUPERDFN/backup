@@ -1,0 +1,633 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TheCookFlow - Tu Menú Semanal</title>
+  <link rel="stylesheet" href="estilos.css">
+  <style>
+    @font-face {
+      font-family: 'Cheveuxdange';
+      src: url('Cheveuxdange.ttf') format('truetype');
+      font-display: swap;
+    }
+    
+    body {
+      font-family: 'Cheveuxdange', sans-serif;
+      background-color: #0f0f0f !important;
+      background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('textura-grunge-oscura.jpg') !important;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-position: center;
+      color: white;
+      padding: 2rem;
+      margin: 0;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    .logo {
+      width: 350px;
+      margin: 0 auto 1.5rem;
+      display: block;
+      filter: brightness(1.1) contrast(1.05);
+    }
+    
+    .menu-container {
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 20px;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+      margin-bottom: 2rem;
+    }
+    
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .dia-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 1.5rem;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .dia-card h3 {
+      color: #58c2a9;
+      text-transform: capitalize;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    
+    .comida {
+      margin-bottom: 1rem;
+      padding: 0.8rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+    }
+    
+    .comida-tipo {
+      font-weight: bold;
+      color: #ff6b6b;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
+    }
+    
+    .lista-compra {
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 20px;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+    }
+    
+    .lista-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.5rem;
+    }
+    
+    .item-compra {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.8rem;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .acciones {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    
+    .btn {
+      padding: 1rem 2rem;
+      border-radius: 25px;
+      font-family: 'Cheveuxdange';
+      font-size: 1.1rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+    
+    .btn-primary {
+      background: #58c2a9;
+      color: white;
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+    
+    .btn-primary:hover {
+      background: #43a491;
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .receta-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .receta-card h3 {
+      color: #58c2a9;
+      margin-bottom: 1rem;
+    }
+    
+    .receta-info {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .receta-meta {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+    }
+    
+    .ingredientes-lista {
+      margin-bottom: 1.5rem;
+    }
+    
+    .ingredientes-lista h4 {
+      color: #ff6b6b;
+      margin-bottom: 0.8rem;
+    }
+    
+    .ingredientes-lista ul {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .ingredientes-lista li {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.5rem 1rem;
+      margin-bottom: 0.3rem;
+      border-radius: 8px;
+      border-left: 3px solid #58c2a9;
+    }
+    
+    .pasos-lista h4 {
+      color: #ff6b6b;
+      margin-bottom: 0.8rem;
+    }
+    
+    .pasos-lista ol {
+      padding-left: 1.5rem;
+    }
+    
+    .pasos-lista li {
+      margin-bottom: 0.8rem;
+      line-height: 1.4;
+    }
+    
+    .plato-nombre {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    
+    .receta-toggle {
+      margin-top: 0.5rem;
+    }
+    
+    .btn-receta {
+      background: rgba(88, 194, 169, 0.8);
+      color: white;
+      border: none;
+      padding: 0.4rem 1rem;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .btn-receta:hover {
+      background: rgba(88, 194, 169, 1);
+      transform: translateY(-1px);
+    }
+    
+    .icono-desplegable {
+      font-size: 0.7rem;
+      transition: transform 0.3s ease;
+    }
+    
+    .icono-desplegable.rotated {
+      transform: rotate(180deg);
+    }
+    
+    .comida-header {
+      position: relative;
+    }
+    
+    .receta-detalle-desplegable {
+      margin-top: 1rem;
+      padding: 0;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      border-left: 3px solid #58c2a9;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      max-height: 0;
+      opacity: 0;
+    }
+    
+    .receta-detalle-desplegable.expanded {
+      max-height: 1000px;
+      opacity: 1;
+      padding: 1rem;
+    }
+    
+    .receta-contenido {
+      padding-top: 0.5rem;
+    }
+    
+    .receta-info-mini {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .receta-info-mini span {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.3rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+    }
+    
+    .ingredientes-mini, .pasos-mini {
+      margin-bottom: 1rem;
+    }
+    
+    .ingredientes-mini h5, .pasos-mini h5 {
+      color: #ff6b6b;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .ingredientes-mini ul, .pasos-mini ol {
+      margin: 0;
+      padding-left: 1.2rem;
+      font-size: 0.85rem;
+    }
+    
+    .ingredientes-mini li, .pasos-mini li {
+      margin-bottom: 0.3rem;
+      line-height: 1.3;
+    }
+    
+    .comida {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .comida:hover {
+      border-color: rgba(88, 194, 169, 0.3);
+      background: rgba(255, 255, 255, 0.08);
+    }
+    
+    .receta-info-mini span.comensales {
+      background: rgba(255, 107, 107, 0.2);
+      color: #ff6b6b;
+    }
+    
+    .receta-info-mini span.tiempo {
+      background: rgba(255, 193, 7, 0.2);
+      color: #ffc107;
+    }
+    
+    .receta-info-mini span.dificultad {
+      background: rgba(88, 194, 169, 0.2);
+      color: #58c2a9;
+    }
+    
+    @media (max-width: 768px) {
+      .menu-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .acciones {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .receta-info {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .receta-info-mini {
+        flex-direction: column;
+        gap: 0.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="logo.PNG" alt="Logo TheCookFlow" class="logo">
+      <h1>Tu Menú Semanal Personalizado</h1>
+    </div>
+    
+    <div class="menu-container">
+      <h2>📅 Menú de la Semana</h2>
+      <div id="menu-grid" class="menu-grid">
+        <!-- El menú se cargará aquí con JavaScript -->
+      </div>
+    </div>
+    
+    <div class="lista-compra">
+      <h2>🛒 Lista de Compras</h2>
+      <div id="lista-grid" class="lista-grid">
+        <!-- La lista de compras se cargará aquí con JavaScript -->
+      </div>
+    </div>
+    
+    <div class="lista-compra" id="recetas-section" style="display: none;">
+      <h2>👨‍🍳 Recetas Detalladas</h2>
+      <div id="recetas-container">
+        <!-- Las recetas se cargarán aquí con JavaScript -->
+      </div>
+    </div>
+    
+    <div class="acciones">
+      <button class="btn btn-primary" onclick="toggleRecetas()">Ver Recetas</button>
+      <button class="btn btn-primary" onclick="nuevoMenu()">Generar Nuevo Menú</button>
+      <button class="btn btn-secondary" onclick="descargarMenu()">Descargar PDF</button>
+      <a href="index.html" class="btn btn-secondary">Volver al Inicio</a>
+    </div>
+  </div>
+
+  <script>
+    // Verificar autenticación
+    if (localStorage.getItem('userLoggedIn') !== 'true') {
+      window.location.href = 'login.html';
+    }
+
+    // Cargar menú del localStorage
+    const menuData = JSON.parse(localStorage.getItem('menuGenerado') || '{}');
+
+    if (!menuData.semana) {
+      alert('No se encontró un menú generado. Serás redirigido al cuestionario.');
+      window.location.href = 'cuestionario.html';
+    }
+
+    // Mostrar menú
+    function cargarMenu() {
+      const menuGrid = document.getElementById('menu-grid');
+      const listaGrid = document.getElementById('lista-grid');
+      
+      // Mostrar menú semanal en orden correcto
+      if (menuData.semana) {
+        const diasOrdenados = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];
+        const comidasOrdenadas = ["desayuno", "comida", "cena"];
+        
+        diasOrdenados.forEach(dia => {
+          if (menuData.semana[dia]) {
+            const comidas = menuData.semana[dia];
+            const diaCard = document.createElement('div');
+            diaCard.className = 'dia-card';
+            
+            let comidasHTML = '';
+            comidasOrdenadas.forEach(tipo => {
+              if (comidas[tipo]) {
+                const comidaData = comidas[tipo];
+            // Extraer datos del plato y receta
+                const nombrePlato = typeof comidaData === 'object' ? comidaData.plato : comidaData;
+                const receta = typeof comidaData === 'object' ? comidaData.receta : null;
+                
+                comidasHTML += `
+                  <div class="comida">
+                    <div class="comida-header">
+                      <div class="comida-tipo">${tipo}</div>
+                      <div class="plato-nombre">${nombrePlato}</div>
+                      ${receta ? `
+                        <div class="receta-toggle">
+                          <button class="btn-receta" onclick="toggleRecetaIndividual('${dia}-${tipo}')">
+                            <span class="icono-desplegable" id="icono-${dia}-${tipo}">▼</span>
+                            <span class="btn-texto">Ver Receta</span>
+                          </button>
+                        </div>
+                      ` : ''}
+                    </div>
+                    ${receta ? `
+                      <div id="receta-${dia}-${tipo}" class="receta-detalle-desplegable" style="display: none;">
+                        <div class="receta-info-mini">
+                          <span class="tiempo">⏱️ ${receta.tiempo_preparacion || 'No especificado'}</span>
+                          <span class="dificultad">📊 ${receta.dificultad || 'No especificado'}</span>
+                          <span class="comensales">👥 ${receta.comensales || 'Variable'}</span>
+                        </div>
+                        <div class="receta-contenido">
+                          <div class="ingredientes-mini">
+                            <h5>🥘 Ingredientes:</h5>
+                            <ul>
+                              ${receta.ingredientes ? receta.ingredientes.map(ing => `<li>${ing}</li>`).join('') : '<li>No disponibles</li>'}
+                            </ul>
+                          </div>
+                          <div class="pasos-mini">
+                            <h5>👨‍🍳 Preparación:</h5>
+                            <ol>
+                              ${receta.pasos ? receta.pasos.map(paso => `<li>${paso}</li>`).join('') : '<li>No disponible</li>'}
+                            </ol>
+                          </div>
+                        </div>
+                      </div>
+                    ` : ''}
+                  </div>
+                `;
+              }
+            });
+            
+            diaCard.innerHTML = `
+              <h3>${dia.charAt(0).toUpperCase() + dia.slice(1)}</h3>
+              ${comidasHTML}
+            `;
+            
+            menuGrid.appendChild(diaCard);
+          }
+        });
+      }
+      
+      // Mostrar lista de compras
+      if (menuData.lista_compra && Array.isArray(menuData.lista_compra)) {
+        menuData.lista_compra.forEach(item => {
+          const itemDiv = document.createElement('div');
+          itemDiv.className = 'item-compra';
+          itemDiv.textContent = item;
+          listaGrid.appendChild(itemDiv);
+        });
+      }
+    }
+
+    function nuevoMenu() {
+      localStorage.removeItem('menuGenerado');
+      window.location.href = 'cuestionario.html';
+    }
+
+    function descargarMenu() {
+      // Función simple para descargar como texto
+      let contenido = 'MENÚ SEMANAL THECOOKFLOW\n\n';
+      
+      if (menuData.semana) {
+        Object.entries(menuData.semana).forEach(([dia, comidas]) => {
+          contenido += `${dia.toUpperCase()}\n`;
+          Object.entries(comidas).forEach(([tipo, plato]) => {
+            contenido += `${tipo}: ${plato}\n`;
+          });
+          contenido += '\n';
+        });
+      }
+      
+      contenido += 'LISTA DE COMPRAS\n';
+      if (menuData.lista_compra) {
+        menuData.lista_compra.forEach(item => {
+          contenido += `- ${item}\n`;
+        });
+      }
+      
+      const blob = new Blob([contenido], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'menu-semanal-thecookflow.txt';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    }
+
+    function toggleRecetaIndividual(comidaId) {
+      const recetaElement = document.getElementById(`receta-${comidaId}`);
+      const icono = document.getElementById(`icono-${comidaId}`);
+      const button = event.target.closest('.btn-receta');
+      const textoBoton = button ? button.querySelector('.btn-texto') : null;
+      
+      if (!recetaElement || !icono || !button || !textoBoton) {
+        console.error('Elementos no encontrados para:', comidaId);
+        return;
+      }
+      
+      if (recetaElement.classList.contains('expanded')) {
+        // Cerrar desplegable
+        recetaElement.classList.remove('expanded');
+        setTimeout(() => {
+          recetaElement.style.display = 'none';
+        }, 300);
+        icono.classList.remove('rotated');
+        icono.textContent = '▼';
+        textoBoton.textContent = 'Ver Receta';
+      } else {
+        // Abrir desplegable
+        recetaElement.style.display = 'block';
+        setTimeout(() => {
+          recetaElement.classList.add('expanded');
+        }, 10);
+        icono.classList.add('rotated');
+        icono.textContent = '▲';
+        textoBoton.textContent = 'Ocultar Receta';
+      }
+    }
+
+    function toggleRecetas() {
+      const recetasSection = document.getElementById('recetas-section');
+      const button = event.target;
+      
+      if (recetasSection.style.display === 'none') {
+        cargarRecetas();
+        recetasSection.style.display = 'block';
+        button.textContent = 'Ocultar Recetas';
+      } else {
+        recetasSection.style.display = 'none';
+        button.textContent = 'Ver Recetas';
+      }
+    }
+
+    function cargarRecetas() {
+      const recetasContainer = document.getElementById('recetas-container');
+      
+      if (menuData.recetas) {
+        recetasContainer.innerHTML = '';
+        
+        Object.entries(menuData.recetas).forEach(([plato, receta]) => {
+          const recetaCard = document.createElement('div');
+          recetaCard.className = 'receta-card';
+          
+          let ingredientesHTML = '';
+          if (receta.ingredientes) {
+            receta.ingredientes.forEach(ingrediente => {
+              ingredientesHTML += `<li>${ingrediente}</li>`;
+            });
+          }
+          
+          let pasosHTML = '';
+          if (receta.pasos) {
+            receta.pasos.forEach(paso => {
+              pasosHTML += `<li>${paso}</li>`;
+            });
+          }
+          
+          recetaCard.innerHTML = `
+            <h3>${plato}</h3>
+            <div class="receta-info">
+              <div class="receta-meta">⏱️ ${receta.tiempo_preparacion || 'No especificado'}</div>
+              <div class="receta-meta">📊 ${receta.dificultad || 'No especificado'}</div>
+            </div>
+            <div class="ingredientes-lista">
+              <h4>🥘 Ingredientes:</h4>
+              <ul>${ingredientesHTML}</ul>
+            </div>
+            <div class="pasos-lista">
+              <h4>👨‍🍳 Pasos de preparación:</h4>
+              <ol>${pasosHTML}</ol>
+            </div>
+          `;
+          
+          recetasContainer.appendChild(recetaCard);
+        });
+      }
+    }
+
+    // Cargar el menú al cargar la página
+    document.addEventListener('DOMContentLoaded', cargarMenu);
+  </script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+Perfecto 🔥
+Aquí tienes el PROMPT QA MAESTRO – Prueba automática del modelo Freemium + Trial + Ads.
+Este script permite que Replit verifique cada paso del flujo completo:
+
+1️⃣ Registro →
+2️⃣ Inicio de prueba gratuita (7 días) →
+3️⃣ Generación de menú (permitido) →
+4️⃣ Límite alcanzado (requiere ver anuncio) →
+5️⃣ Desbloqueo tras anuncio →
+6️⃣ Verificación Play Billing (compra real simulada) →
+7️⃣ Cancelación y retorno al plan Free.
+
+Todo se ejecuta automáticamente desde la terminal de Replit con un solo comando:
+npm run qa:freemium
+
+🧪 PROMPT QA MAESTRO (Replit)
+
+👉 Pega esto en tu Replit (Agent/Workspace) y deja que lo cree todo.
+
+1️⃣ Actualiza package.json
+
+Agrega este script QA:
+
+{
+  "scripts": {
+    "qa:freemium": "node tools/qa/freemium-flow.test.js"
+  }
+}
+
+2️⃣ Crea el archivo: tools/qa/freemium-flow.test.js
+import 'dotenv/config';
+const API = process.env.QA_API_BASE || 'http://localhost:3000';
+
+async function post(path, body) {
+  const res = await fetch(`${API}${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  const json = await res.json();
+  return { ok: res.ok, status: res.status, json };
+}
+async function get(path) {
+  const res = await fetch(`${API}${path}`);
+  const json = await res.json();
+  return { ok: res.ok, status: res.status, json };
+}
+function log(ok, msg) {
+  console.log(ok ? `✅ ${msg}` : `❌ ${msg}`);
+  if (!ok) process.exit(1);
+}
+
+(async () => {
+  console.log(`🚀 QA Freemium TheCookFlow`);
+  console.log(`Base URL: ${API}`);
+
+  const userId = `qa_user_${Date.now()}`;
+
+  // 1) Iniciar prueba gratuita
+  let r = await post('/api/start-trial', { userId });
+  log(r.ok && r.json.trialActive, 'Trial iniciado correctamente');
+
+  // 2) Verificar estado (día 0)
+  r = await get(`/api/subscription-status?userId=${userId}`);
+  log(r.ok && r.json.trialActive && r.json.expiresIn === 7, 'Estado Trial: activo (día 0)');
+
+  // 3) Generar primer menú (FREE/TRIAL permitido)
+  r = await post('/api/generate-menu', { userId, test: true });
+  log(r.ok || r.status === 200, 'Primer menú generado correctamente');
+
+  // 4) Simular alcanzar límite (FREE)
+  console.log('Simulando plan FREE para probar límite...');
+  await post('/api/billing/cancel', { userId });
+  r = await get(`/api/subscription-status?userId=${userId}`);
+  log(r.ok && r.json.plan === 'free', 'Usuario convertido a FREE correctamente');
+
+  // Intentar generar segundo menú (debe requerir anuncio)
+  r = await post('/api/generate-menu', { userId, test: true });
+  log(!r.ok && r.status === 403 && r.json.code === 'NEED_AD', 'Bloqueo por anuncio detectado');
+
+  // 5) Desbloquear con anuncio
+  await post('/api/unlock-after-ad', { userId });
+  r = await post('/api/generate-menu', { userId, test: true });
+  log(r.ok, 'Desbloqueo tras anuncio funcionando');
+
+  // 6) Simular compra verificada
+  r = await post('/api/billing/verify', { userId, purchaseToken: 'abcOK' });
+  log(r.ok && r.json.plan === 'pro', 'Compra verificada correctamente (plan PRO)');
+
+  // 7) Verificar que ya no hay límites
+  r = await post('/api/generate-menu', { userId, test: true });
+  log(r.ok, 'Usuario PRO puede generar sin límites');
+
+  // 8) Cancelar suscripción
+  await post('/api/billing/cancel', { userId });
+  r = await get(`/api/subscription-status?userId=${userId}`);
+  log(r.ok && r.json.plan === 'free' && !r.json.active, 'Cancelación de suscripción confirmada');
+
+  console.log('\n🎉 QA FREEMIUM COMPLETADO CON ÉXITO');
+  process.exit(0);
+})();
+
+3️⃣ Ejecutar prueba
+
+En la consola de Replit:
+
+npm run qa:freemium
+
+
+Salida esperada:
+
+🚀 QA Freemium TheCookFlow
+✅ Trial iniciado correctamente
+✅ Estado Trial: activo (día 0)
+✅ Primer menú generado correctamente
+Simulando plan FREE para probar límite...
+✅ Usuario convertido a FREE correctamente
+✅ Bloqueo por anuncio detectado
+✅ Desbloqueo tras anuncio funcionando
+✅ Compra verificada correctamente (plan PRO)
+✅ Usuario PRO puede generar sin límites
+✅ Cancelación de suscripción confirmada
+
+🎉 QA FREEMIUM COMPLETADO CON ÉXITO
+
+4️⃣ Qué verifica este QA
+Fase	Acción	Resultado esperado
+🟢 Registro / Inicio Trial	POST /api/start-trial	Crea usuario con plan trial, activo 7 días.
+🔍 Estado	GET /api/subscription-status	Devuelve {plan:"trial", trialActive:true, expiresIn:7}
+🍳 Generar menú	POST /api/generate-menu	Permitido durante trial.
+🔒 Fin de trial (free)	POST /api/billing/cancel	Cambia a plan:"free".
+🚫 Límite alcanzado	POST /api/generate-menu	Devuelve 403 NEED_AD.
+🎬 Ver anuncio	POST /api/unlock-after-ad	Permite nuevo menú.
+💳 Pago validado	POST /api/billing/verify	Devuelve {plan:"pro", active:true}
+♾️ PRO sin límites	POST /api/generate-menu	Permitido siempre.
+❌ Cancelar plan	POST /api/billing/cancel	Devuelve a estado FREE.
+5️⃣ (Opcional) QA visual en consola
+
+Si quieres una salida con colores bonitos en Replit, puedes añadir chalk:
+
+npm i chalk
+
+
+Y reemplazar:
+
+import chalk from "chalk";
+function log(ok,msg){console.log(ok?chalk.green('✅ '+msg):chalk.red('❌ '+msg));if(!ok)process.exit(1);}
+
+
+✅ Resultado final:
+Tu entorno Replit podrá probar automáticamente el modelo freemium completo, validando:
+
+Inicio y caducidad del trial,
+
+Control de anuncios y límites,
+
+Verificación Play Billing (mock),
+
+Cambio de plan a PRO,
+
+Cancelación de suscripción,
+
+Sin errores ni falsos positivos.
