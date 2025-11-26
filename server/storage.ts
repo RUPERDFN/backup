@@ -26,7 +26,7 @@ import {
   type InsertUserAchievement,
   type UserStats,
   type InsertUserStats,
-} from "@shared/schema";
+} from "/shared/schema";
 import { db } from "./db";
 import { eq, desc, and, inArray, lte, gte } from "drizzle-orm";
 

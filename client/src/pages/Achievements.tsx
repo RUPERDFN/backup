@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Trophy, Target, Flame, Award } from "lucide-react";
 import AchievementBadge from "@/components/AchievementBadge";
-import type { Achievement, UserStats } from "@shared/schema";
+import type { Achievement, UserStats } from "/shared/schema";
 
 type EnrichedAchievement = Achievement & { unlocked?: boolean; hidden?: boolean };
 
