@@ -276,7 +276,7 @@ adb logcat *:E
 5. Android recibe confirmación y actualiza UI
 
 **Archivos clave**:
-- `server/googlePlayBilling.ts` - Servicio de verificación Google Play
+- `api/server/googlePlayBilling.ts` - Servicio de verificación Google Play
 - `android/app/src/main/java/com/cookflow/app/GooglePlayBillingManager.kt` - Cliente HTTP
 - `firebase-service-account.json` - Credenciales (gitignored)
 

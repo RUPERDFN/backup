@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { validateEnv, checkAIKeys, getGooglePlayPublicKey } from '../server/env';
+import { validateEnv, checkAIKeys, getGooglePlayPublicKey } from '../api/server/env';
 
 describe('Environment Validation', () => {
   beforeEach(() => {

@@ -14,7 +14,7 @@
       "@lib/*": ["client/src/lib/*"],
       "/shared/*": ["shared/*"],
       "@assets/*": ["attached_assets/*"],
-      "@server/*": ["server/*"]
+      "@server/*": ["api/server/*"]
     },
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
@@ -26,7 +26,7 @@
   },
   "include": [
     "client/**/*",
-    "server/**/*",
+    "api/server/**/*",
     "shared/**/*"
   ],
   "exclude": [

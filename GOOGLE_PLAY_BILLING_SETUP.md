@@ -37,7 +37,7 @@ TheCookFlow implementa verificación segura server-side de compras de Google Pla
 
 ### Backend (Node.js/Express)
 
-#### 1. `server/googlePlayBilling.ts`
+#### 1. `api/server/googlePlayBilling.ts`
 Servicio principal de verificación:
 
 ```typescript
@@ -57,7 +57,7 @@ export function getGooglePlayService(): GooglePlayBillingService
 - ✅ Fallback a variables de entorno si no existe archivo
 - ✅ Validación completa de estado de suscripción
 
-#### 2. `server/routes/freemium.ts`
+#### 2. `api/server/routes/freemium.ts`
 Endpoint principal de verificación:
 
 ```typescript
