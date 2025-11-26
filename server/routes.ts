@@ -11,7 +11,7 @@ import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 import { ObjectPermission } from "./objectAcl";
 import { openai, completeMenuPrompt, recognizeFoodFromImage, generateWeeklyMenuPlan, generateRecipeSuggestions, type MenuPreferences } from "./openai";
 import { askPerplexity, enhanceMenuWithTrends, generateMenuPlanWithPerplexity, recognizeIngredientsWithPerplexity } from "./perplexity";
-import { insertMenuPlanSchema, insertRecipeSchema, insertShoppingListSchema, insertFoodRecognitionSchema } from "@shared/schema";
+import { insertMenuPlanSchema, insertRecipeSchema, insertShoppingListSchema, insertFoodRecognitionSchema } from "/shared/schema";
 
 import { analyzePromptTokens, calculateCost, calculateCostComparison, TokenUsage, EXAMPLE_PROMPT_ANALYSIS, API_COSTS_SONAR_BASIC, PERPLEXITY_SEARCH_COST } from './tokenAnalysis';
 import * as googlePlayBilling from "./routes/googlePlayBilling";

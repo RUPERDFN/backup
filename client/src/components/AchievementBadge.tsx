@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Lock, Check } from "lucide-react";
-import type { Achievement } from "@shared/schema";
+import type { Achievement } from "/shared/schema";
 
 interface AchievementBadgeProps {
   achievement: Achievement & { unlocked?: boolean; hidden?: boolean };

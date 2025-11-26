@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { storage } from '../storage';
-import { insertAchievementSchema, insertUserStatsSchema } from '@shared/schema';
+import { insertAchievementSchema, insertUserStatsSchema } from '/shared/schema';
 
 const router = express.Router();
 

@@ -1,6 +1,6 @@
 import { eq, and } from 'drizzle-orm';
-import { menuGenerationLimits, userSubscriptions } from '@shared/schema';
-import type { MenuGenerationLimit } from '@shared/schema';
+import { menuGenerationLimits, userSubscriptions } from '/shared/schema';
+import type { MenuGenerationLimit } from '/shared/schema';
 import { db } from '../db';
 import { getSubscriptionStatus } from './billingService';
 
