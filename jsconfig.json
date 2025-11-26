@@ -7,11 +7,11 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["client/src/*"],
-      "@components/*": ["client/src/components/*"],
-      "@pages/*": ["client/src/pages/*"],
-      "@hooks/*": ["client/src/hooks/*"],
-      "@lib/*": ["client/src/lib/*"],
+      "@/*": ["webapp/src/*"],
+      "@components/*": ["webapp/src/components/*"],
+      "@pages/*": ["webapp/src/pages/*"],
+      "@hooks/*": ["webapp/src/hooks/*"],
+      "@lib/*": ["webapp/src/lib/*"],
       "@shared/*": ["shared/*"],
       "@assets/*": ["attached_assets/*"],
       "@server/*": ["server/*"]
@@ -25,7 +25,7 @@
     "noEmit": true
   },
   "include": [
-    "client/**/*",
+    "webapp/**/*",
     "server/**/*",
     "shared/**/*"
   ],

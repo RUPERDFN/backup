@@ -1,12 +1,14 @@
+# TheCookFlow robots.txt
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /admin
+Disallow: /admin/
+Disallow: /private/
 Disallow: /qa
 Disallow: /qa/
 Disallow: /tour/
-Disallow: /admin
-Disallow: /admin/
 Disallow: /previews/
-Disallow: /api/
 
 # Sitemap
 Sitemap: https://thecookflow.replit.app/sitemap.xml
@@ -17,14 +19,14 @@ Crawl-delay: 1
 # Specific rules for common bots
 User-agent: Googlebot
 Allow: /
+Disallow: /api/
 Disallow: /qa
 Disallow: /tour/
 Disallow: /admin
-Disallow: /api/
 
 User-agent: Bingbot
 Allow: /
+Disallow: /api/
 Disallow: /qa
 Disallow: /tour/
 Disallow: /admin
-Disallow: /api/

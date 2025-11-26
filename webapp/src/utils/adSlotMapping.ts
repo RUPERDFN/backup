@@ -6,7 +6,7 @@ export const AD_SLOT_MAPPING = {
   web: {
     // src/pages/HomeFeed.tsx → Native (#feed-grid): after 6º y cada 8
     homeFeed: {
-      file: 'client/src/pages/Home.tsx',
+      file: 'webapp/src/pages/Home.tsx',
       component: 'NativeFeed',
       selector: '#feed-grid',
       type: 'native',
@@ -21,7 +21,7 @@ export const AD_SLOT_MAPPING = {
 
     // src/pages/RecipeDetail.tsx → Banner (.ad-banner--detail) bajo .tips-section
     recipeDetail: {
-      file: 'client/src/pages/RecipeDetail.tsx', // To be created
+      file: 'webapp/src/pages/RecipeDetail.tsx', // To be created
       component: 'BannerDetail',
       selector: '.ad-banner--detail',
       type: 'banner',
@@ -35,7 +35,7 @@ export const AD_SLOT_MAPPING = {
 
     // src/pages/ShoppingList.tsx → Banner (.ad-banner--shopping) tras .totals
     shoppingList: {
-      file: 'client/src/pages/MenuGenerated.tsx',
+      file: 'webapp/src/pages/MenuGenerated.tsx',
       component: 'BannerShopping',
       selector: '.ad-banner--shopping',
       type: 'banner',
@@ -49,7 +49,7 @@ export const AD_SLOT_MAPPING = {
 
     // src/pages/MenuResult.tsx → Interstitial en onMenuGenerated()
     menuResult: {
-      file: 'client/src/pages/MenuGenerated.tsx',
+      file: 'webapp/src/pages/MenuGenerated.tsx',
       component: 'InterstitialAd',
       trigger: 'onMenuGenerated',
       type: 'interstitial',
@@ -64,7 +64,7 @@ export const AD_SLOT_MAPPING = {
 
     // src/components/PremiumActionBar.tsx → Rewarded en CTA
     premiumActions: {
-      file: 'client/src/components/PremiumActionBar.tsx',
+      file: 'webapp/src/components/PremiumActionBar.tsx',
       component: 'RewardedAd',
       trigger: 'premium_action_buttons',
       type: 'rewarded',
@@ -79,7 +79,7 @@ export const AD_SLOT_MAPPING = {
 
     // src/pages/SavedRecipes.tsx → Native discreto
     savedRecipes: {
-      file: 'client/src/pages/SavedRecipes.tsx',
+      file: 'webapp/src/pages/SavedRecipes.tsx',
       component: 'RecipeFeed',
       type: 'native',
       placement: 'end_of_first_scroll',
