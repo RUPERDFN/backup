@@ -17,14 +17,14 @@ COPY . .
 RUN npm run build
 
 # Verify build output
-RUN ls -la dist/ && ls -la dist/public/
+RUN ls -la dist/ && ls -la landing/dist/public/
 
 # Set production environment and path variables
 ENV NODE_ENV=production
 ENV PORT=5000
 ENV SERVER_DIR=/app/dist
 ENV ROOT_DIR=/app
-ENV DIST_PATH=/app/dist/public
+ENV DIST_PATH=/app/landing/dist/public
 
 # Create non-root user for security
 RUN addgroup -g 1001 -S nodejs && \

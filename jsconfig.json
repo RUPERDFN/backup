@@ -7,11 +7,11 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["client/src/*"],
-      "@components/*": ["client/src/components/*"],
-      "@pages/*": ["client/src/pages/*"],
-      "@hooks/*": ["client/src/hooks/*"],
-      "@lib/*": ["client/src/lib/*"],
+      "@/*": ["landing/client/src/*"],
+      "@components/*": ["landing/client/src/components/*"],
+      "@pages/*": ["landing/client/src/pages/*"],
+      "@hooks/*": ["landing/client/src/hooks/*"],
+      "@lib/*": ["landing/client/src/lib/*"],
       "@shared/*": ["shared/*"],
       "@assets/*": ["attached_assets/*"],
       "@server/*": ["server/*"]
@@ -25,7 +25,7 @@
     "noEmit": true
   },
   "include": [
-    "client/**/*",
+    "landing/client/**/*",
     "server/**/*",
     "shared/**/*"
   ],

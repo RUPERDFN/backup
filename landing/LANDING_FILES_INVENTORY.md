@@ -2,6 +2,8 @@
 
 ## 📄 Archivos Principales de la Landing
 
+> Nota: todos los archivos de la landing ahora están ubicados bajo el directorio raíz `landing/` (por ejemplo, `landing/client/src/...`).
+
 ### 1. **Página Principal de Landing**
 - **`client/src/pages/Landing.tsx`** - Componente principal de la landing page
   - Hero section con logo y CTA

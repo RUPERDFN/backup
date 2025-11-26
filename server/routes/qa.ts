@@ -14,7 +14,12 @@ export function registerQARoutes(app: Express) {
       archive.pipe(res);
 
       // Generate bundle contents
-      const qaAssetsDir = path.join(process.cwd(), 'public', 'qa-assets');
+      const qaAssetsDir = path.join(
+        process.cwd(),
+        'landing',
+        'public',
+        'qa-assets',
+      );
       if (!fs.existsSync(qaAssetsDir)) {
         fs.mkdirSync(qaAssetsDir, { recursive: true });
       }
@@ -84,7 +89,12 @@ export function registerQARoutes(app: Express) {
       archive.directory(qaAssetsDir, 'qa-assets');
       
       // Add previews if they exist
-      const previewsDir = path.join(process.cwd(), 'public', 'previews');
+      const previewsDir = path.join(
+        process.cwd(),
+        'landing',
+        'public',
+        'previews',
+      );
       if (fs.existsSync(previewsDir)) {
         archive.directory(previewsDir, 'previews');
       }
@@ -122,7 +132,12 @@ export function registerQARoutes(app: Express) {
         };
 
         // Save report info
-        const qaAssetsDir = path.join(process.cwd(), 'public', 'qa-assets');
+        const qaAssetsDir = path.join(
+          process.cwd(),
+          'landing',
+          'public',
+          'qa-assets',
+        );
         if (!fs.existsSync(qaAssetsDir)) {
           fs.mkdirSync(qaAssetsDir, { recursive: true });
         }

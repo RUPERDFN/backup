@@ -12,7 +12,8 @@ const __dirname = path.dirname(__filename);
 process.env.INIT_CWD = process.env.INIT_CWD || __dirname;
 process.env.SERVER_DIR = process.env.SERVER_DIR || path.join(__dirname, 'dist');
 process.env.ROOT_DIR = process.env.ROOT_DIR || __dirname;
-process.env.DIST_PATH = process.env.DIST_PATH || path.join(__dirname, 'dist', 'public');
+process.env.DIST_PATH =
+  process.env.DIST_PATH || path.join(__dirname, 'landing', 'dist', 'public');
 
 // Polyfill import.meta.dirname for compatibility
 if (typeof globalThis !== 'undefined' && !globalThis.importMetaDirname) {
