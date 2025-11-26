@@ -6,10 +6,10 @@ Todos los archivos y funcionalidades están implementados según prompts R0-R11:
 
 ### 📁 Archivos Creados
 
-- ✅ `server/index.js` - API Express completa (R1)
-- ✅ `server/services/ai.js` - Servicio IA con mock (R2)
-- ✅ `server/services/billing.js` - Sistema freemium (R3)
-- ✅ `server/middleware/security.js` - Sanitización (R5)
+- ✅ `api/server/index.js` - API Express completa (R1)
+- ✅ `api/server/services/ai.js` - Servicio IA con mock (R2)
+- ✅ `api/server/services/billing.js` - Sistema freemium (R3)
+- ✅ `api/server/middleware/security.js` - Sanitización (R5)
 - ✅ `public/tcf-bridge.js` - Bridge WebApp ↔ Android (R8)
 - ✅ `tools/qa/health-check.js` - Tests automáticos (R6)
 - ✅ `.env.example` - Variables de configuración (R0)
@@ -36,12 +36,12 @@ cp .env.example .env
 
 **Opción B - Node directo:**
 ```bash
-PORT=3000 node server/index.js
+PORT=3000 node api/server/index.js
 ```
 
 **Opción C - Con variables personalizadas:**
 ```bash
-PORT=3000 ALLOWED_ORIGINS="http://localhost:5173" node server/index.js
+PORT=3000 ALLOWED_ORIGINS="http://localhost:5173" node api/server/index.js
 ```
 
 ### 3. Verificar

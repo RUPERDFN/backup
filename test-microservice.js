@@ -8,7 +8,7 @@ async function testMicroservice() {
   console.log('🚀 Iniciando microservicio de monetización...');
   
   // Spawn del proceso del microservicio
-  const microservice = spawn('node', ['server-microservice/index.js'], {
+  const microservice = spawn('node', ['api/server-microservice/index.js'], {
     env: { ...process.env, PORT: '3003' },
     detached: false,
     stdio: ['ignore', 'pipe', 'pipe']

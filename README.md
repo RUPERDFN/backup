@@ -186,13 +186,15 @@ window.addEventListener('tcf:deeplink', async (e) => {
 
 ```
 .
-├── server/
-│   ├── index.js              # API Express principal
-│   ├── middleware/
-│   │   └── security.js       # Sanitización y seguridad
-│   └── services/
-│       ├── ai.js             # Servicio IA (OpenAI/mock)
-│       └── billing.js        # Sistema freemium
+├── api/
+│   ├── server/               # API Express principal
+│   │   ├── index.js
+│   │   ├── middleware/
+│   │   │   └── security.js   # Sanitización y seguridad
+│   │   └── services/
+│   │       ├── ai.js         # Servicio IA (OpenAI/mock)
+│   │       └── billing.js    # Sistema freemium
+│   └── server-microservice/  # Microservicio de monetización
 ├── public/
 │   └── tcf-bridge.js         # Bridge WebApp ↔ Android
 ├── tools/qa/
@@ -241,8 +243,8 @@ window.addEventListener('tcf:deeplink', async (e) => {
 ## 📚 Documentación Adicional
 
 - **PROMPT R0-R11**: Ver archivo adjunto con especificaciones completas
-- **Seguridad**: Ver [`server/middleware/security.js`](server/middleware/security.js)
-- **Servicios**: Ver [`server/services/`](server/services/)
+- **Seguridad**: Ver [`api/server/middleware/security.js`](api/server/middleware/security.js)
+- **Servicios**: Ver [`api/server/services/`](api/server/services/)
 
 ---
 

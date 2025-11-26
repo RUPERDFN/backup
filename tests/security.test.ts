@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { Request, Response, NextFunction } from 'express';
-import { globalErrorHandler, notFoundHandler, generateNonce } from '../server/middleware/security';
+import { globalErrorHandler, notFoundHandler, generateNonce } from '../api/server/middleware/security';
 
 // Mock Express objects
 const mockRequest = (overrides = {}) => ({

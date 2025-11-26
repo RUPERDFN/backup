@@ -20,4 +20,4 @@ mkdir -p "$UPLOAD_DIR"
 
 # Iniciar servidor
 echo "🚀 Servidor escuchando en puerto $PORT"
-node server/index.js
+node api/server/index.js

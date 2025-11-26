@@ -1,14 +1,14 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { performDetailedHealthCheck } from '../server/healthCheck';
+import { performDetailedHealthCheck } from '../api/server/healthCheck';
 
 // Mock dependencies
-vi.mock('../server/db', () => ({
+vi.mock('../api/server/db', () => ({
   db: {
     execute: vi.fn()
   }
 }));
 
-vi.mock('../server/env', () => ({
+vi.mock('../api/server/env', () => ({
   checkAIKeys: vi.fn(() => ({ openai: true, perplexity: true }))
 }));
 
@@ -22,7 +22,7 @@ describe('Health Check System', () => {
 
   it('should return healthy status when all services are up', async () => {
     // Mock successful database query
-    const { db } = await import('../server/db');
+    const { db } = await import('../api/server/db');
     vi.mocked(db.execute).mockResolvedValue([{ health_check: 1 }]);
 
     // Mock successful API responses
@@ -41,7 +41,7 @@ describe('Health Check System', () => {
 
   it('should return unhealthy status when database is down', async () => {
     // Mock database failure
-    const { db } = await import('../server/db');
+    const { db } = await import('../api/server/db');
     vi.mocked(db.execute).mockRejectedValue(new Error('Connection refused'));
 
     // Mock successful API responses
@@ -58,7 +58,7 @@ describe('Health Check System', () => {
 
   it('should return unhealthy status when APIs are down', async () => {
     // Mock successful database
-    const { db } = await import('../server/db');
+    const { db } = await import('../api/server/db');
     vi.mocked(db.execute).mockResolvedValue([{ health_check: 1 }]);
 
     // Mock API failures
@@ -75,7 +75,7 @@ describe('Health Check System', () => {
 
   it('should cache API results for 60 seconds', async () => {
     // Mock successful database
-    const { db } = await import('../server/db');
+    const { db } = await import('../api/server/db');
     vi.mocked(db.execute).mockResolvedValue([{ health_check: 1 }]);
 
     // Mock API responses
@@ -97,7 +97,7 @@ describe('Health Check System', () => {
 
   it('should handle timeout errors properly', async () => {
     // Mock successful database
-    const { db } = await import('../server/db');
+    const { db } = await import('../api/server/db');
     vi.mocked(db.execute).mockResolvedValue([{ health_check: 1 }]);
 
     // Mock timeout errors
@@ -114,7 +114,7 @@ describe('Health Check System', () => {
 
   it('should measure response times accurately', async () => {
     // Mock successful database with delay
-    const { db } = await import('../server/db');
+    const { db } = await import('../api/server/db');
     vi.mocked(db.execute).mockImplementation(() => 
       new Promise(resolve => setTimeout(() => resolve([{ health_check: 1 }]), 50))
     );
