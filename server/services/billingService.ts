@@ -1,6 +1,6 @@
 import { eq, and } from 'drizzle-orm';
-import { userSubscriptions, users, googlePlayPurchases } from '@shared/schema';
-import type { UserSubscription, InsertUserSubscription } from '@shared/schema';
+import { userSubscriptions, users, googlePlayPurchases } from '/shared/schema';
+import type { UserSubscription, InsertUserSubscription } from '/shared/schema';
 import { db } from '../db';
 
 const TRIAL_DURATION_DAYS = 7;
