@@ -8,6 +8,17 @@
 - **assets**: Binary or static resources reused across landing/webapp (images, store screenshots, base64 exports, QA assets).
 - Generated/system folders (`node_modules`, `.git`, `.venv`, build artifacts) are excluded from moves and should be recreated as needed.
 
+## 1b) Phased approach and commit order
+1. **Scaffold roots**: create `/assets`, `/landing`, `/webapp`, `/api`, and `/shared` with README placeholders describing intended contents.
+2. **Documentation first**: land reorg planning docs (mapping, owners, and move scripts) before touching code or configs.
+3. **Move static/legal assets**: relocate landing pages and shared binaries (`public` assets, store uploads, backups) into `/landing` and `/assets`.
+4. **Move frontend**: shift Vite/React client and mobile artifacts into `/webapp`, adjusting config files that reference old paths.
+5. **Move backend**: relocate Node/Express servers, migrations, deploy/process scripts, and tooling into `/api`.
+6. **Wire shared code**: ensure `/shared` modules resolve from new aliases in both front-end and back-end configs.
+7. **Post-move fixes**: update imports, scripts, Docker/compose contexts, and CI references; finish with a validation pass (lint/tests/build).
+
+Commit chronologically following the phases above so each change stays reviewable and reversible.
+
 ## 2) OLD_PATH → NEW_PATH mapping
 - README.md → api/docs/README.md
 - DEPLOYMENT_GUIDE.md → api/docs/deploy/DEPLOYMENT_GUIDE.md
